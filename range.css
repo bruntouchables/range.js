@@ -1,0 +1,26 @@
+.range {
+  background: #cfd8d6;
+  display: flex;
+  /* display: inline-flex; - for inline range */
+  height: 10px;
+  position: relative;
+  margin: 9px 0;
+  width: 400px;
+}
+
+.range-fill {
+  background: #1bbe8e;
+  width: 100px;
+}
+
+.range-handle {
+  align-self: center;
+  background: #fff;
+  border: 3px solid #1bbe8e;
+  border-radius: 100%;
+  display: flex;
+  height: 20px;
+  position: relative;
+  left: -10px;
+  width: 20px;
+}
