@@ -32,8 +32,8 @@ function Range(element) {
     return;
   }
 
-  max = Number(element.getAttribute('max'));
   min = Number(element.getAttribute('min'));
+  max = Number(element.getAttribute('max'));
 
   // default step = (max - min) / 100
   step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
@@ -45,7 +45,7 @@ function Range(element) {
 
   // create wrapper
   let wrapper = document.createElement('div');
-  wrapper.classList.add('range', `range-${element.id}`);
+  wrapper.classList.add('range', 'range-' + element.id);
 
   // create range-fill
   let fill = document.createElement('span');
@@ -67,63 +67,62 @@ function Range(element) {
   // append element
   wrapper.appendChild(element);
 
+  // calculate wrapper width
+  let wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
+
   // hide input
   element.style.display = 'none';
 
-  handle.setAttribute('draggable', 'true');
-
-  handle.addEventListener('dragstart', (event) => {
-    // remove drag cursor
-    event.dataTransfer.effectAllowed = 'none';
-
-    // create a fake ghost
-    let ghost = handle.cloneNode(false);
-
-    // hide it
-    // BTDT: display: none; doesn't work
-    ghost.style.cssText = `
-      left: 0;
-      position: absolute;
-      top: 0;
-      visibility: hidden;
-      z-index: -1;
-    `;
-
-    // place it into the DOM tree
-    document.body.appendChild(ghost);
-
-    // set the fake ghost as a "drag image" of the dragged element
-    event.dataTransfer.setDragImage(ghost, 0, 0);
+  wrapper.addEventListener('click', (event) => {
+    if (event.target == wrapper || event.target == fill) {
+      // calculate value
+      value = calculateValue(event.offsetX);
+    }
   });
 
-  // add drag event on range-handle
-  handle.addEventListener('drag', (event) => {
-    // remove drag cursor
-    event.dataTransfer.effectAllowed = 'none';
+  // disable default drag start event handler
+  handle.addEventListener('dragstart', () => {
+    return false;
+  });
+  // add custom mouse down event handler
+  handle.addEventListener('mousedown', mouseDown);
 
-    let wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10)
-      , fillWidth = parseInt(window.getComputedStyle(fill).width, 10)
-      , newWidth = fillWidth + event.offsetX
-      , round = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
+  function mouseDown(event) {
+    // add event listeners to mouse move and mouse up
+    // BTDT: attach events to document not element
+    document.addEventListener('mousemove', mouseMove);
+    document.addEventListener('mouseup', mouseUp);
 
-    // value = Math.floor((newWidth / wrapperWidth) * step);
+    // disable selection
+    return false;
+  }
 
-    // calculate new width
-    if (newWidth > wrapperWidth) {
-      fill.style.width = wrapperWidth + 'px';
-    } else {
-      fill.style.width = newWidth + 'px';
-    }
+  function mouseMove(event) {
+    event.preventDefault();
 
-    // value
-    let stepWidth = wrapperWidth / breakpoints;
+    let newWidth = (event.pageX - wrapper.offsetLeft > wrapperWidth) ? wrapperWidth : event.pageX - wrapper.offsetLeft;
+    value = calculateValue(newWidth);
+  }
+
+  function mouseUp(event) {
+    // remove mouse move and mouse up events
+    document.removeEventListener('mousemove', mouseMove);
+    document.removeEventListener('mouseup', mouseUp);
+  }
+
+  function calculateValue(newWidth) {
+    let precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0
+      , stepWidth = wrapperWidth / breakpoints;
 
     value = (newWidth / stepWidth) * step;
 
-    if (value - Math.floor(value) > 0.4 && round == 0) {
-      value = Math.ceil(value);
-    } else if (round == 0) {
-      value = Math.floor(value);
+    // whole number values
+    if (precision == 0) {
+      if (value - Math.floor(value) >= 0.5) {
+        value = Math.ceil(value);
+      } else {
+        value = Math.floor(value);
+      }
     }
 
     if (value < min) {
@@ -132,26 +131,11 @@ function Range(element) {
       value = max;
     }
 
-    value = value.toFixed(round);
+    value = value.toFixed(precision);
 
-    console.log(value);
-  });
+    newWidth = value * stepWidth;
+    fill.style.width = newWidth + 'px';
 
-  handle.addEventListener('drop', (event) => {
-    // remove drag cursor
-    event.dataTransfer.effectAllowed = 'none';
-  });
-
-  handle.addEventListener('dragend', (event) => {
-    // remove a fake ghost
-    document.body.removeChild(document.body.lastChild);
-  });
-
-  wrapper.addEventListener('click', (event) => {
-    // calculate new width
-    fill.style.width = event.offsetX + 'px';
-
-    let fillWidth = parseInt(window.getComputedStyle(fill).width, 10);
-    console.log(fillWidth);
-  })
+    return value;
+  }
 }

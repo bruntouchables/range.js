@@ -12,9 +12,11 @@
     
     <script src="range.js"></script>
     <script>
-      // init
-      let element = document.getElementById('example');
-      new Range(element);
+      (() => {
+        // init
+        let element = document.getElementById('example');
+        new Range(element);
+      })();
     </script>
   </body>
 </html>

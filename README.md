@@ -9,5 +9,6 @@ TODO
 - make handle round
 - change value on click
 - make default value = (max + min) / 2
+- improve behavior if styles are disabled
 
 Under Development
