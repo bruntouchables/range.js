@@ -103,10 +103,10 @@ function Range(element) {
 
     let wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10)
       , fillWidth = parseInt(window.getComputedStyle(fill).width, 10)
-      , newWidth = fillWidth + event.offsetX;
-    
-    value = Math.floor((newWidth / wrapperWidth) * step);
-    console.log(newWidth, wrapperWidth, step, value);
+      , newWidth = fillWidth + event.offsetX
+      , round = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
+
+    // value = Math.floor((newWidth / wrapperWidth) * step);
 
     // calculate new width
     if (newWidth > wrapperWidth) {
@@ -114,6 +114,27 @@ function Range(element) {
     } else {
       fill.style.width = newWidth + 'px';
     }
+
+    // value
+    let stepWidth = wrapperWidth / breakpoints;
+
+    value = (newWidth / stepWidth) * step;
+
+    if (value - Math.floor(value) > 0.4 && round == 0) {
+      value = Math.ceil(value);
+    } else if (round == 0) {
+      value = Math.floor(value);
+    }
+
+    if (value < min) {
+      value = min;
+    } else if (value > max) {
+      value = max;
+    }
+
+    value = value.toFixed(round);
+
+    console.log(value);
   });
 
   handle.addEventListener('drop', (event) => {
@@ -125,4 +146,12 @@ function Range(element) {
     // remove a fake ghost
     document.body.removeChild(document.body.lastChild);
   });
+
+  wrapper.addEventListener('click', (event) => {
+    // calculate new width
+    fill.style.width = event.offsetX + 'px';
+
+    let fillWidth = parseInt(window.getComputedStyle(fill).width, 10);
+    console.log(fillWidth);
+  })
 }
