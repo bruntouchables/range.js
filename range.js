@@ -7,15 +7,41 @@
 
 /**
  * Range slider
- * 
+ *
  * @param element
  * @constructor
  */
 function Range(element) {
+  let value, step, breakpoints, min, max;
+
+  // id attribute required
   if (!element.id) {
     console.warn("An element must have an id attribute.");
     return;
   }
+
+  // min attribute required
+  if (!element.getAttribute('min')) {
+    console.warn("An element must have a min attribute.");
+    return;
+  }
+
+  // max attribute required
+  if (!element.getAttribute('max')) {
+    console.warn("An element must have a max attribute.");
+    return;
+  }
+
+  max = Number(element.getAttribute('max'));
+  min = Number(element.getAttribute('min'));
+
+  // default step = (max - min) / 100
+  step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
+
+  // default value = min
+  value = element.getAttribute('value') ? Number(element.getAttribute('value')) : min;
+
+  breakpoints = (max - min) / step;
 
   // create wrapper
   let wrapper = document.createElement('div');
@@ -46,10 +72,57 @@ function Range(element) {
 
   handle.setAttribute('draggable', 'true');
 
-  // add drag event on range-handle
-  handle.addEventListener('drag', (event) => {
-    console.log(event);
+  handle.addEventListener('dragstart', (event) => {
+    // remove drag cursor
+    event.dataTransfer.effectAllowed = 'none';
+
+    // create a fake ghost
+    let ghost = handle.cloneNode(false);
+
+    // hide it
+    // BTDT: display: none; doesn't work
+    ghost.style.cssText = `
+      left: 0;
+      position: absolute;
+      top: 0;
+      visibility: hidden;
+      z-index: -1;
+    `;
+
+    // place it into the DOM tree
+    document.body.appendChild(ghost);
+
+    // set the fake ghost as a "drag image" of the dragged element
+    event.dataTransfer.setDragImage(ghost, 0, 0);
   });
 
-  let range = `<div class="range"></div>`;
+  // add drag event on range-handle
+  handle.addEventListener('drag', (event) => {
+    // remove drag cursor
+    event.dataTransfer.effectAllowed = 'none';
+
+    let wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10)
+      , fillWidth = parseInt(window.getComputedStyle(fill).width, 10)
+      , newWidth = fillWidth + event.offsetX;
+    
+    value = Math.floor((newWidth / wrapperWidth) * step);
+    console.log(newWidth, wrapperWidth, step, value);
+
+    // calculate new width
+    if (newWidth > wrapperWidth) {
+      fill.style.width = wrapperWidth + 'px';
+    } else {
+      fill.style.width = newWidth + 'px';
+    }
+  });
+
+  handle.addEventListener('drop', (event) => {
+    // remove drag cursor
+    event.dataTransfer.effectAllowed = 'none';
+  });
+
+  handle.addEventListener('dragend', (event) => {
+    // remove a fake ghost
+    document.body.removeChild(document.body.lastChild);
+  });
 }
