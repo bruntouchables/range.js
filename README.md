@@ -2,6 +2,7 @@
 Finally, a range slider that we all deserve.
 
 TODO
+
 1. add value on top of the range handle
 2. adjust range width and height values in css
 3. find a better solution for a `dragstart` event fake ghost
