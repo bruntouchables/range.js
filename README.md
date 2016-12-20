@@ -8,5 +8,6 @@ TODO
 5. make handle round
 7. make default value = (max + min) / 2
 8. improve behavior if styles are disabled
+9. add `setValue` and `getValue` functionality
 
 Under Development
