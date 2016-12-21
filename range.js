@@ -57,6 +57,9 @@ function Range(element) {
   // append element
   wrapper.appendChild(element);
 
+  // hide input
+  element.style.display = 'none';
+
   let wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
 
   min = Number(element.getAttribute('min'));
@@ -65,7 +68,7 @@ function Range(element) {
   // default step = (max - min) / 100
   step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
 
-  breakpoints = (max - min) / step;
+  breakpoints = (max - min + 1) / step;
   precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
 
   stepWidth = wrapperWidth / breakpoints;
@@ -75,16 +78,13 @@ function Range(element) {
   element.setAttribute('value', value);
   setValue(value);
 
-  // hide input
-  element.style.display = 'none';
-
   wrapper.addEventListener('click', (event) => {
     if (event.target == wrapper || event.target == fill) {
       value = calculateValue(event.offsetX);
-      
+
       // update input value
       element.setAttribute('value', value);
-      
+
       // update output value
       output.textContent = value;
     }
@@ -108,15 +108,15 @@ function Range(element) {
   }
 
   function mouseMove(event) {
+    // disable selection
     event.preventDefault();
-    // anything else here?
-    
+
     let newWidth = (event.pageX - wrapper.offsetLeft > wrapperWidth) ? wrapperWidth : event.pageX - wrapper.offsetLeft;
     value = calculateValue(newWidth);
-    
+
     // update input value
     element.setAttribute('value', value);
-    
+
     // update output value
     output.textContent = value;
   }
@@ -135,41 +135,36 @@ function Range(element) {
 
     // whole number values
     if (precision == 0) {
-      if (newValue - Math.floor(newValue) >= 0.5) {
-        newValue = Math.ceil(newValue);
-      } else {
-        newValue = Math.floor(newValue);
-      }
+      newValue = Math.round(newValue);
+    } else {
+      newValue = Number(newValue.toFixed(precision));
     }
 
-    newValue = Number(newValue.toFixed(precision));
-    calculateValue(newValue * stepWidth);
-    
+    calculateValue(Math.abs(newValue * stepWidth));
+
     // update module value
     value = newValue;
 
     // update input value
     element.setAttribute('value', newValue);
-    
+
     // update output value
     output.textContent = newValue;
   }
-  
+
   function getValue() {
     return value;
   }
 
   // private method
   function calculateValue(newWidth) {
-    let newValue = (newWidth / stepWidth) * step;
-
+    let newValue = min + (newWidth / stepWidth) * step;
+    
     // whole number values
     if (precision == 0) {
-      if (newValue - Math.floor(newValue) >= 0.5) {
-        newValue = Math.ceil(newValue);
-      } else {
-        newValue = Math.floor(newValue);
-      }
+      newValue = Math.round(newValue);
+    } else {
+      newValue = Number(newValue.toFixed(precision));
     }
 
     if (newValue < min) {
@@ -178,9 +173,9 @@ function Range(element) {
       newValue = max;
     }
 
-    newValue = Number(newValue.toFixed(precision));
-
-    newWidth = newValue * stepWidth;
+    // discontinuous drag effect
+    newWidth = (newValue - min) * stepWidth / step;
+    
     fill.style.width = newWidth + 'px';
 
     return newValue;
