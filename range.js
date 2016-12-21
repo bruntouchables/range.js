@@ -11,21 +11,10 @@
  * @param element
  * @constructor
  */
-function Range(element) {
-  let value, step, stepWidth, precision, breakpoints, min, max;
+
+let Range = (() => {
+  let value, step, stepWidth, precision, breakpoints, min, max, element, wrapperWidth;
   let output = document.querySelector('output');
-
-  // min attribute required
-  if (!element.getAttribute('min')) {
-    console.warn("An element must have a min attribute.");
-    return;
-  }
-
-  // max attribute required
-  if (!element.getAttribute('max')) {
-    console.warn("An element must have a max attribute.");
-    return;
-  }
 
   // create wrapper
   let wrapper = document.createElement('div');
@@ -39,74 +28,23 @@ function Range(element) {
   let handle = document.createElement('span');
   handle.classList.add('range-handle');
 
-  // append wrapper
-  element.parentNode.insertBefore(wrapper, element);
-
-  // append range-fill
-  wrapper.appendChild(fill);
-
-  // append range-handles
-  wrapper.appendChild(handle);
-
-  // append element
-  wrapper.appendChild(element);
-
-  // hide input
-  element.style.display = 'none';
-
-  let wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
-
-  min = Number(element.getAttribute('min'));
-  max = Number(element.getAttribute('max'));
-
-  // default step = (max - min) / 100
-  step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
-
-  breakpoints = (max - min + 1) / step;
-  precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
-
-  stepWidth = wrapperWidth / breakpoints;
-
-  // default value = min
-  value = element.getAttribute('value') ? Number(element.getAttribute('value')) : (max + min) / 2;
-  element.setAttribute('value', value);
-  setValue(value);
-
-  wrapper.addEventListener('click', (event) => {
-    if (event.target == wrapper || event.target == fill) {
-      value = calculateValue(event.offsetX);
-
-      // update input value
-      element.setAttribute('value', value);
-
-      // update output value
-      output.textContent = value;
-    }
-  });
-
-  // disable default drag start event handler
-  handle.addEventListener('dragstart', () => {
-    return false;
-  });
-  // add custom mouse down event handler
-  handle.addEventListener('mousedown', mouseDown);
-
-  function mouseDown(event) {
+  // private methods
+  function __mouseDown(event) {
     // add event listeners to mouse move and mouse up
     // BTDT: attach events to document not element
-    document.addEventListener('mousemove', mouseMove);
-    document.addEventListener('mouseup', mouseUp);
+    document.addEventListener('mousemove', __mouseMove);
+    document.addEventListener('mouseup', __mouseUp);
 
     // disable selection
     return false;
   }
 
-  function mouseMove(event) {
+  function __mouseMove(event) {
     // disable selection
     event.preventDefault();
 
     let newWidth = (event.pageX - wrapper.offsetLeft > wrapperWidth) ? wrapperWidth : event.pageX - wrapper.offsetLeft;
-    value = calculateValue(newWidth);
+    value = __calculateValue(newWidth);
 
     // update input value
     element.setAttribute('value', value);
@@ -115,45 +53,15 @@ function Range(element) {
     output.textContent = value;
   }
 
-  function mouseUp(event) {
+  function __mouseUp(event) {
     // remove mouse move and mouse up events
-    document.removeEventListener('mousemove', mouseMove);
-    document.removeEventListener('mouseup', mouseUp);
+    document.removeEventListener('mousemove', __mouseMove);
+    document.removeEventListener('mouseup', __mouseUp);
   }
 
-  function setValue(newValue) {
-    if (newValue < min || newValue > max) {
-      console.warn("A new value is out of bounds.");
-      return;
-    }
-
-    // whole number values
-    if (precision == 0) {
-      newValue = Math.round(newValue);
-    } else {
-      newValue = Number(newValue.toFixed(precision));
-    }
-
-    calculateValue(Math.abs(newValue * stepWidth));
-
-    // update module value
-    value = newValue;
-
-    // update input value
-    element.setAttribute('value', newValue);
-
-    // update output value
-    output.textContent = newValue;
-  }
-
-  function getValue() {
-    return value;
-  }
-
-  // private method
-  function calculateValue(newWidth) {
+  function __calculateValue(newWidth) {
     let newValue = min + (newWidth / stepWidth) * step;
-    
+
     // whole number values
     if (precision == 0) {
       newValue = Math.round(newValue);
@@ -169,9 +77,116 @@ function Range(element) {
 
     // discontinuous drag effect
     newWidth = (newValue - min) * stepWidth / step;
-    
+
     fill.style.width = newWidth + 'px';
 
     return newValue;
   }
-}
+
+  // public methods
+  let init = (elem) => {
+    element = elem;
+
+    // min attribute required
+    if (!element.getAttribute('min')) {
+      console.warn("An element must have a min attribute.");
+      return;
+    }
+
+    // max attribute required
+    if (!element.getAttribute('max')) {
+      console.warn("An element must have a max attribute.");
+      return;
+    }
+
+    // append wrapper
+    element.parentNode.insertBefore(wrapper, element);
+
+    // append range-fill
+    wrapper.appendChild(fill);
+
+    // append range-handles
+    wrapper.appendChild(handle);
+
+    // append element
+    wrapper.appendChild(element);
+
+    // hide input
+    element.style.display = 'none';
+
+    wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
+
+    min = Number(element.getAttribute('min'));
+    max = Number(element.getAttribute('max'));
+
+    // default step = (max - min) / 100
+    step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
+
+    breakpoints = (max - min + 1) / step;
+    precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
+
+    stepWidth = wrapperWidth / breakpoints;
+
+    // default value = min
+    value = element.getAttribute('value') ? Number(element.getAttribute('value')) : (max + min) / 2;
+    element.setAttribute('value', value);
+    setValue(value);
+
+    wrapper.addEventListener('click', (event) => {
+      if (event.target == wrapper || event.target == fill) {
+        value = __calculateValue(event.offsetX);
+
+        // update input value
+        element.setAttribute('value', value);
+
+        // update output value
+        output.textContent = value;
+      }
+    });
+
+    // disable default drag start event handler
+    handle.addEventListener('dragstart', () => {
+      return false;
+    });
+    // add custom mouse down event handler
+    handle.addEventListener('mousedown', __mouseDown);
+
+    return Range;
+  };
+
+  function setValue(newValue) {
+    if (newValue < min || newValue > max) {
+      console.warn("A new value is out of bounds.");
+      return;
+    }
+
+    // whole number values
+    if (precision == 0) {
+      newValue = Math.round(newValue);
+    } else {
+      newValue = Number(newValue.toFixed(precision));
+    }
+
+    __calculateValue(Math.abs(newValue - min) * stepWidth);
+
+    // update module value
+    value = newValue;
+
+    // update input value
+    element.setAttribute('value', newValue);
+
+    // update output value
+    output.textContent = newValue;
+  }
+
+  function getValue() {
+    return value;
+  }
+
+  // return public methods
+  return {
+    init: init,
+    setValue: setValue,
+    getValue: getValue
+  };
+})();

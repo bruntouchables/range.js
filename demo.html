@@ -14,10 +14,9 @@
     <script src="range.js"></script>
     <script>
       let element = document.getElementById('example');
-      let rate = new Range(element);
-      
-      // rate.setValue(5);
-      // rate.getValue();
+      let rate = Range.init(element);
+      rate.setValue(5);
+      console.log(rate.getValue());
     </script>
   </body>
 </html>
