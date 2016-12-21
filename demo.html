@@ -3,20 +3,21 @@
   <head lang="en">
     <meta charset="utf-8">
     <title>Demo</title>
-    
+
     <link rel="stylesheet" href="range.css">
   </head>
   <body>
-    <label for="example">Choose value:</label>
-    <input type="range" min="0" max="10" step="1" id="example">
-    
+    <label for="example">Rate us:</label>
+    <input type="range" min="1" max="10" step="1" id="example">
+    <output for="example">0</output>
+
     <script src="range.js"></script>
     <script>
-      (() => {
-        // init
-        let element = document.getElementById('example');
-        new Range(element);
-      })();
+      let element = document.getElementById('example');
+      let rate = new Range(element);
+      
+      // rate.setValue(5);
+      // rate.getValue();
     </script>
   </body>
 </html>

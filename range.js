@@ -12,7 +12,8 @@
  * @constructor
  */
 function Range(element) {
-  let value, step, breakpoints, min, max;
+  let value, step, stepWidth, precision, breakpoints, min, max;
+  let output = document.querySelector(`output[for="${element.id}"]`);
 
   // id attribute required
   if (!element.id) {
@@ -31,17 +32,6 @@ function Range(element) {
     console.warn("An element must have a max attribute.");
     return;
   }
-
-  min = Number(element.getAttribute('min'));
-  max = Number(element.getAttribute('max'));
-
-  // default step = (max - min) / 100
-  step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
-
-  // default value = min
-  value = element.getAttribute('value') ? Number(element.getAttribute('value')) : min;
-
-  breakpoints = (max - min) / step;
 
   // create wrapper
   let wrapper = document.createElement('div');
@@ -67,16 +57,36 @@ function Range(element) {
   // append element
   wrapper.appendChild(element);
 
-  // calculate wrapper width
   let wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
+
+  min = Number(element.getAttribute('min'));
+  max = Number(element.getAttribute('max'));
+
+  // default step = (max - min) / 100
+  step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
+
+  breakpoints = (max - min) / step;
+  precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
+
+  stepWidth = wrapperWidth / breakpoints;
+
+  // default value = min
+  value = element.getAttribute('value') ? Number(element.getAttribute('value')) : (max + min) / 2;
+  element.setAttribute('value', value);
+  setValue(value);
 
   // hide input
   element.style.display = 'none';
 
   wrapper.addEventListener('click', (event) => {
     if (event.target == wrapper || event.target == fill) {
-      // calculate value
       value = calculateValue(event.offsetX);
+      
+      // update input value
+      element.setAttribute('value', value);
+      
+      // update output value
+      document.querySelector(`output[for="${element.id}"]`).textContent = value;
     }
   });
 
@@ -99,9 +109,16 @@ function Range(element) {
 
   function mouseMove(event) {
     event.preventDefault();
-
+    // anything else here?
+    
     let newWidth = (event.pageX - wrapper.offsetLeft > wrapperWidth) ? wrapperWidth : event.pageX - wrapper.offsetLeft;
     value = calculateValue(newWidth);
+    
+    // update input value
+    element.setAttribute('value', value);
+    
+    // update output value
+    document.querySelector(`output[for="${element.id}"]`).textContent = value;
   }
 
   function mouseUp(event) {
@@ -110,32 +127,61 @@ function Range(element) {
     document.removeEventListener('mouseup', mouseUp);
   }
 
-  function calculateValue(newWidth) {
-    let precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0
-      , stepWidth = wrapperWidth / breakpoints;
-
-    value = (newWidth / stepWidth) * step;
+  function setValue(newValue) {
+    if (newValue < min || newValue > max) {
+      console.warn("A new value is out of bounds.");
+      return;
+    }
 
     // whole number values
     if (precision == 0) {
-      if (value - Math.floor(value) >= 0.5) {
-        value = Math.ceil(value);
+      if (newValue - Math.floor(newValue) >= 0.5) {
+        newValue = Math.ceil(newValue);
       } else {
-        value = Math.floor(value);
+        newValue = Math.floor(newValue);
       }
     }
 
-    if (value < min) {
-      value = min;
-    } else if (value > max) {
-      value = max;
+    newValue = Number(newValue.toFixed(precision));
+    calculateValue(newValue * stepWidth);
+    
+    // update module value
+    value = newValue;
+
+    // update input value
+    element.setAttribute('value', newValue);
+    
+    // update output value
+    output.textContent = newValue;
+  }
+  
+  function getValue() {
+    return value;
+  }
+
+  function calculateValue(newWidth) {
+    let newValue = (newWidth / stepWidth) * step;
+
+    // whole number values
+    if (precision == 0) {
+      if (newValue - Math.floor(newValue) >= 0.5) {
+        newValue = Math.ceil(newValue);
+      } else {
+        newValue = Math.floor(newValue);
+      }
     }
 
-    value = value.toFixed(precision);
+    if (newValue < min) {
+      newValue = min;
+    } else if (newValue > max) {
+      newValue = max;
+    }
 
-    newWidth = value * stepWidth;
+    newValue = Number(newValue.toFixed(precision));
+
+    newWidth = newValue * stepWidth;
     fill.style.width = newWidth + 'px';
 
-    return value;
+    return newValue;
   }
 }
