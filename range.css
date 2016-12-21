@@ -2,8 +2,7 @@
   background: #cfd8d6;
   display: inline-flex;
   height: 10px;
-  position: relative;
-  margin: 8px 0;
+  margin: 7px 0;
   width: 400px;
 }
 
@@ -24,8 +23,7 @@
   display: inline-flex;
   flex-shrink: 0;
   flex-grow: 0;
-  height: 15px;
+  height: 14px;
   cursor: pointer;
-  position: relative;
   width: 20px;
 }

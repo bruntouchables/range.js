@@ -13,13 +13,7 @@
  */
 function Range(element) {
   let value, step, stepWidth, precision, breakpoints, min, max;
-  let output = document.querySelector('output[for="' + element.id + '"]');
-
-  // id attribute required
-  if (!element.id) {
-    console.warn("An element must have an id attribute.");
-    return;
-  }
+  let output = document.querySelector('output');
 
   // min attribute required
   if (!element.getAttribute('min')) {
@@ -35,7 +29,7 @@ function Range(element) {
 
   // create wrapper
   let wrapper = document.createElement('div');
-  wrapper.classList.add('range', 'range-' + element.id);
+  wrapper.classList.add('range');
 
   // create range-fill
   let fill = document.createElement('span');
@@ -51,7 +45,7 @@ function Range(element) {
   // append range-fill
   wrapper.appendChild(fill);
 
-  // append range-handle
+  // append range-handles
   wrapper.appendChild(handle);
 
   // append element
