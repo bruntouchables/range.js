@@ -13,7 +13,7 @@
  */
 function Range(element) {
   let value, step, stepWidth, precision, breakpoints, min, max;
-  let output = document.querySelector(`output[for="${element.id}"]`);
+  let output = document.querySelector('output[for="' + element.id + '"]');
 
   // id attribute required
   if (!element.id) {
@@ -86,7 +86,7 @@ function Range(element) {
       element.setAttribute('value', value);
       
       // update output value
-      document.querySelector(`output[for="${element.id}"]`).textContent = value;
+      output.textContent = value;
     }
   });
 
@@ -118,7 +118,7 @@ function Range(element) {
     element.setAttribute('value', value);
     
     // update output value
-    document.querySelector(`output[for="${element.id}"]`).textContent = value;
+    output.textContent = value;
   }
 
   function mouseUp(event) {
@@ -159,6 +159,7 @@ function Range(element) {
     return value;
   }
 
+  // private method
   function calculateValue(newWidth) {
     let newValue = (newWidth / stepWidth) * step;
 
