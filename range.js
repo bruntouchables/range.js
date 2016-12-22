@@ -13,8 +13,9 @@
  */
 
 let Range = (() => {
-  let value, step, stepWidth, precision, breakpoints, min, max, element, wrapperWidth;
+  let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, wrapperWidth;
   let output = document.querySelector('output');
+  let onInitCallback, onSlideCallback, onSlideEndCallback, onValueChangeCallback;
 
   // create wrapper
   let wrapper = document.createElement('div');
@@ -35,6 +36,9 @@ let Range = (() => {
     document.addEventListener('mousemove', __mouseMove);
     document.addEventListener('mouseup', __mouseUp);
 
+    // set oldValue
+    oldValue = value;
+
     // disable selection
     return false;
   }
@@ -43,20 +47,39 @@ let Range = (() => {
     // disable selection
     event.preventDefault();
 
+    let valueBeforeSlide = value;
+
     let newWidth = (event.pageX - wrapper.offsetLeft > wrapperWidth) ? wrapperWidth : event.pageX - wrapper.offsetLeft;
     value = __calculateValue(newWidth);
 
-    // update input value
-    element.setAttribute('value', value);
+    if (valueBeforeSlide !== value) {
+      // update input value
+      element.setAttribute('value', value);
 
-    // update output value
-    output.textContent = value;
+      // update output value
+      output.textContent = value;
+
+      // callback call
+      if (onSlideCallback) {
+        onSlideCallback();
+      }
+    }
   }
 
   function __mouseUp(event) {
     // remove mouse move and mouse up events
     document.removeEventListener('mousemove', __mouseMove);
     document.removeEventListener('mouseup', __mouseUp);
+
+    // onSlideEnd callback call
+    if (onSlideEndCallback) {
+      onSlideEndCallback();
+    }
+
+    // onValueChange callback call
+    if (onValueChangeCallback && oldValue !== value) {
+      onValueChangeCallback();
+    }
   }
 
   function __calculateValue(newWidth) {
@@ -84,7 +107,7 @@ let Range = (() => {
   }
 
   // public methods
-  let init = (elem) => {
+  let init = (elem, callback) => {
     element = elem;
 
     // min attribute required
@@ -151,6 +174,17 @@ let Range = (() => {
     // add custom mouse down event handler
     handle.addEventListener('mousedown', __mouseDown);
 
+    // return input element
+    Range.element = element;
+
+    // onInitCallback
+    onInitCallback = callback;
+
+    // callback call
+    if (onInitCallback) {
+      onInitCallback();
+    }
+
     return Range;
   };
 
@@ -183,10 +217,28 @@ let Range = (() => {
     return value;
   }
 
+  // onSlide
+  function onSlide(callback) {
+    onSlideCallback = callback;
+  }
+
+  // onSlideEnd
+  function onSlideEnd(callback) {
+    onSlideEndCallback = callback;
+  }
+
+  // onValueChange
+  function onValueChange(callback) {
+    onValueChangeCallback = callback
+  }
+
   // return public methods
   return {
     init: init,
     setValue: setValue,
-    getValue: getValue
+    getValue: getValue,
+    onSlide: onSlide,
+    onValueChange: onValueChange,
+    onSlideEnd: onSlideEnd
   };
 })();

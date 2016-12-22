@@ -13,9 +13,9 @@ Finally, a range slider that we all deserve.
 8. ~~add `setValue` and `getValue` functionality~~
 9. ~~get rid off the id attribute requirement~~
 10. ~~use JS module pattern~~
-11. onInit(), onSlide(), onSlideEnd() functions
-12. add multiple inputs support
-13. add `oninput` event handler
+11. ~~onInit(), onSlide(), onSlideEnd() functions~~
+12. ~~add `oninput` event handler~~
+13. add multiple inputs support
 14. use _range (or other) prefix for CSS classes
 15. refactor code 
 

@@ -14,9 +14,22 @@
     <script src="range.js"></script>
     <script>
       let element = document.getElementById('example');
-      let rate = Range.init(element);
+      let rate = Range.init(element, () => {
+        console.log("range.js has been successfully initialized");
+      });
       rate.setValue(5);
-      console.log(rate.getValue());
+      rate.onSlide(() => {
+//        if (rate.getValue() > 0) {
+//          rate.setValue(0);
+//        }
+//        console.log(rate.getValue());
+      });
+      rate.onSlideEnd(() => {
+//        console.log(rate.getValue());
+      });
+      rate.onValueChange(() => {
+//        console.log(rate.getValue());
+      });
     </script>
   </body>
 </html>
