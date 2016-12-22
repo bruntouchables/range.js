@@ -5,17 +5,8 @@
 
 'use strict';
 
-/**
- * Range slider
- *
- * @param element
- * @constructor
- */
-
 let Range = (() => {
-  let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, wrapperWidth;
-  // let output = document.querySelector('output');
-  let outputList = [];
+  let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, outputList = [], wrapperWidth;
   let onInitCallback, onSlideCallback, onSlideEndCallback, onValueChangeCallback;
 
   // create wrapper
@@ -31,11 +22,11 @@ let Range = (() => {
   handle.classList.add('range-handle');
 
   // private methods
-  function __mouseDown(event) {
+  function _mouseDown(event) {
     // add event listeners to mouse move and mouse up
     // BTDT: attach events to document not element
-    document.addEventListener('mousemove', __mouseMove);
-    document.addEventListener('mouseup', __mouseUp);
+    document.addEventListener('mousemove', _mouseMove);
+    document.addEventListener('mouseup', _mouseUp);
 
     // set oldValue
     oldValue = value;
@@ -44,14 +35,14 @@ let Range = (() => {
     return false;
   }
 
-  function __mouseMove(event) {
+  function _mouseMove(event) {
     // disable selection
     event.preventDefault();
 
     let valueBeforeSlide = value;
 
     let newWidth = (event.pageX - wrapper.offsetLeft > wrapperWidth) ? wrapperWidth : event.pageX - wrapper.offsetLeft;
-    value = __calculateValue(newWidth);
+    value = _calculateValue(newWidth);
 
     if (valueBeforeSlide !== value) {
       // update input value
@@ -71,23 +62,23 @@ let Range = (() => {
     }
   }
 
-  function __mouseUp(event) {
+  function _mouseUp(event) {
     // remove mouse move and mouse up events
-    document.removeEventListener('mousemove', __mouseMove);
-    document.removeEventListener('mouseup', __mouseUp);
+    document.removeEventListener('mousemove', _mouseMove);
+    document.removeEventListener('mouseup', _mouseUp);
 
-    // onSlideEnd callback call
+    // on slide end callback call
     if (onSlideEndCallback) {
       onSlideEndCallback();
     }
 
-    // onValueChange callback call
+    // on value change callback call
     if (onValueChangeCallback && oldValue !== value) {
       onValueChangeCallback();
     }
   }
 
-  function __calculateValue(newWidth) {
+  function _calculateValue(newWidth) {
     let newValue = min + (newWidth / stepWidth) * step;
 
     // whole number values
@@ -112,7 +103,7 @@ let Range = (() => {
   }
 
   // public methods
-  let init = (elem, output, callback) => {
+  let init = (elem, output = [], callback) => {
     element = elem;
 
     // output list
@@ -165,7 +156,7 @@ let Range = (() => {
 
     wrapper.addEventListener('click', (event) => {
       if (event.target == wrapper || event.target == fill) {
-        value = __calculateValue(event.offsetX);
+        value = _calculateValue(event.offsetX);
 
         // update input value
         element.setAttribute('value', value);
@@ -184,12 +175,12 @@ let Range = (() => {
       return false;
     });
     // add custom mouse down event handler
-    handle.addEventListener('mousedown', __mouseDown);
+    handle.addEventListener('mousedown', _mouseDown);
 
     // return input element
     Range.element = element;
 
-    // onInitCallback
+    // on init callback
     onInitCallback = callback;
 
     // callback call
@@ -213,7 +204,7 @@ let Range = (() => {
       newValue = Number(newValue.toFixed(precision));
     }
 
-    __calculateValue(Math.abs(newValue - min) * stepWidth);
+    _calculateValue(Math.abs(newValue - min) * stepWidth);
 
     // update module value
     value = newValue;
@@ -233,17 +224,17 @@ let Range = (() => {
     return value;
   }
 
-  // onSlide
+  // on slide
   function onSlide(callback) {
     onSlideCallback = callback;
   }
 
-  // onSlideEnd
+  // on slide end
   function onSlideEnd(callback) {
     onSlideEndCallback = callback;
   }
 
-  // onValueChange
+  // on value change
   function onValueChange(callback) {
     onValueChangeCallback = callback
   }

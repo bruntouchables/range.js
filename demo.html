@@ -9,28 +9,29 @@
   <body>
     <label for="example">Rate us:</label>
     <input type="range" min="-10" max="10" step="1" value="-5" id="example">
-    <output for="example"></output>
+    <output></output>
 
     <script src="range.js"></script>
     <script>
       let element = document.getElementById('example');
-
+      
       let outputList = document.getElementsByTagName('output');
-
-//      console.log(outputList);
+      console.log(outputList);
 
       let rate = Range.init(element, outputList, () => {
         console.log("range.js has been successfully initialized");
       });
+      
+      // set value
       rate.setValue(5);
       rate.onSlide(() => {
-//        Do something
+        // do something on slide
       });
       rate.onSlideEnd(() => {
-//        Do Something
+        // do something on slide end
       });
       rate.onValueChange(() => {
-//        Do Something
+        // do something only when value has been changed
       });
     </script>
   </body>

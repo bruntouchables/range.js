@@ -18,7 +18,8 @@ Finally, a range slider that we all deserve.
 13. ~~add multiple inputs support~~
 14. ~~add multiple outputs support~~
 15. use _range (or other) prefix for CSS classes
-16. refactor code 
+16. adapt cursor position
+17. refactor code
 
 _Under Development_
 
