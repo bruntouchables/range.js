@@ -14,7 +14,8 @@
 
 let Range = (() => {
   let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, wrapperWidth;
-  let output = document.querySelector('output');
+  // let output = document.querySelector('output');
+  let outputList = [];
   let onInitCallback, onSlideCallback, onSlideEndCallback, onValueChangeCallback;
 
   // create wrapper
@@ -57,7 +58,11 @@ let Range = (() => {
       element.setAttribute('value', value);
 
       // update output value
-      output.textContent = value;
+      if (outputList) {
+        for (let i = 0; i < outputList.length; i++) {
+          outputList[i].textContent = value;
+        }
+      }
 
       // callback call
       if (onSlideCallback) {
@@ -107,8 +112,11 @@ let Range = (() => {
   }
 
   // public methods
-  let init = (elem, callback) => {
+  let init = (elem, output, callback) => {
     element = elem;
+
+    // output list
+    outputList = output;
 
     // min attribute required
     if (!element.getAttribute('min')) {
@@ -163,7 +171,11 @@ let Range = (() => {
         element.setAttribute('value', value);
 
         // update output value
-        output.textContent = value;
+        if (outputList) {
+          for (let i = 0; i < outputList.length; i++) {
+            outputList[i].textContent = value;
+          }
+        }
       }
     });
 
@@ -210,7 +222,11 @@ let Range = (() => {
     element.setAttribute('value', newValue);
 
     // update output value
-    output.textContent = newValue;
+    if (outputList) {
+      for (let i = 0; i < outputList.length; i++) {
+        outputList[i].textContent = newValue;
+      }
+    }
   }
 
   function getValue() {

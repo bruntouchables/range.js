@@ -15,9 +15,10 @@ Finally, a range slider that we all deserve.
 10. ~~use JS module pattern~~
 11. ~~onInit(), onSlide(), onSlideEnd() functions~~
 12. ~~add `oninput` event handler~~
-13. add multiple inputs support
-14. use _range (or other) prefix for CSS classes
-15. refactor code 
+13. ~~add multiple inputs support~~
+14. ~~add multiple outputs support~~
+15. use _range (or other) prefix for CSS classes
+16. refactor code 
 
 _Under Development_
 

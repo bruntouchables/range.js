@@ -14,7 +14,12 @@
     <script src="range.js"></script>
     <script>
       let element = document.getElementById('example');
-      let rate = Range.init(element, () => {
+
+      let outputList = document.getElementsByTagName('output');
+
+//      console.log(outputList);
+
+      let rate = Range.init(element, outputList, () => {
         console.log("range.js has been successfully initialized");
       });
       rate.setValue(5);
