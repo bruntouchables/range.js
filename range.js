@@ -40,8 +40,14 @@ let Range = (() => {
     event.preventDefault();
 
     let valueBeforeSlide = value;
+    let newWidth;
 
-    let newWidth = (event.pageX - wrapper.offsetLeft > wrapperWidth) ? wrapperWidth : event.pageX - wrapper.offsetLeft;
+    if (event.pageX - wrapper.getBoundingClientRect().left > wrapperWidth) {
+      newWidth = wrapperWidth;
+    } else {
+      newWidth = event.pageX - wrapper.getBoundingClientRect().left;
+    }
+    
     value = _calculateValue(newWidth);
 
     if (valueBeforeSlide !== value) {
