@@ -8,6 +8,7 @@
 let Range = (() => {
   let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, outputList = [], wrapperWidth;
   let onInitCallback, onSlideCallback, onSlideEndCallback, onValueChangeCallback;
+  let mouseDownAt;
 
   // create wrapper
   let wrapper = document.createElement('div');
@@ -30,7 +31,12 @@ let Range = (() => {
 
     // set oldValue
     oldValue = value;
-
+    
+    mouseDownAt = {
+      x: event.pageX,
+      element: event.target
+    };
+    
     // disable selection
     return false;
   }
@@ -86,6 +92,7 @@ let Range = (() => {
 
   function _calculateValue(newWidth) {
     let newValue = min + (newWidth / stepWidth) * step;
+    console.log(newValue, newWidth, step, stepWidth);
 
     // whole number values
     if (precision == 0) {
@@ -150,7 +157,7 @@ let Range = (() => {
     // default step = (max - min) / 100
     step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
 
-    breakpoints = (max - min + 1) / step;
+    breakpoints = Math.ceil((max - min + 1) / step);
     precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
 
     stepWidth = wrapperWidth / breakpoints;
@@ -209,8 +216,8 @@ let Range = (() => {
     } else {
       newValue = Number(newValue.toFixed(precision));
     }
-
-    _calculateValue(Math.abs(newValue - min) * stepWidth);
+    
+    _calculateValue((Math.abs(newValue - min) / step) * stepWidth);
 
     // update module value
     value = newValue;
