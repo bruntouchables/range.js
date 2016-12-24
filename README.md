@@ -20,7 +20,7 @@ Finally, a range slider that we all deserve.
 15. use _range (or other) prefix for CSS classes
 16. adapt cursor position
 17. ~~calculate element position properly~~
-18. add step value functionality
+18. ~~add step functionality~~
 19. refactor code
 
 _Under Development_

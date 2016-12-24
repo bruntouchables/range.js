@@ -8,7 +8,7 @@
   </head>
   <body>
     <label for="example">Rate us:</label>
-    <input type="range" min="10" max="100" step="5" id="example">
+    <input type="range" min="10" max="100" step="10" id="example">
     <output></output>
 
     <script src="range.js"></script>
@@ -19,9 +19,9 @@
       let rate = Range.init(element, outputList, () => {
         console.log("range.js has been successfully initialized");
       });
-      
+
       // set value
-//      rate.setValue(5);
+      rate.setValue(30);
       rate.onSlide(() => {
         // do something on slide
       });

@@ -8,7 +8,6 @@
 let Range = (() => {
   let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, outputList = [], wrapperWidth;
   let onInitCallback, onSlideCallback, onSlideEndCallback, onValueChangeCallback;
-  let mouseDownAt;
 
   // create wrapper
   let wrapper = document.createElement('div');
@@ -31,12 +30,7 @@ let Range = (() => {
 
     // set oldValue
     oldValue = value;
-    
-    mouseDownAt = {
-      x: event.pageX,
-      element: event.target
-    };
-    
+
     // disable selection
     return false;
   }
@@ -53,7 +47,7 @@ let Range = (() => {
     } else {
       newWidth = event.pageX - wrapper.getBoundingClientRect().left;
     }
-    
+
     value = _calculateValue(newWidth);
 
     if (valueBeforeSlide !== value) {
@@ -92,7 +86,6 @@ let Range = (() => {
 
   function _calculateValue(newWidth) {
     let newValue = min + (newWidth / stepWidth) * step;
-    console.log(newValue, newWidth, step, stepWidth);
 
     // whole number values
     if (precision == 0) {
@@ -105,6 +98,13 @@ let Range = (() => {
       newValue = min;
     } else if (newValue > max) {
       newValue = max;
+    }
+
+    // consider step
+    if (newValue % step > step / 2) {
+      newValue = newValue - newValue % step + step;
+    } else {
+      newValue = newValue - newValue % step;
     }
 
     // discontinuous drag effect
@@ -156,6 +156,10 @@ let Range = (() => {
 
     // default step = (max - min) / 100
     step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
+    if (step === 0) {
+      console.warn("Step cannot be equal to 0.");
+      return;
+    }
 
     breakpoints = Math.ceil((max - min + 1) / step);
     precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
@@ -164,6 +168,12 @@ let Range = (() => {
 
     // default value = min
     value = element.getAttribute('value') ? Number(element.getAttribute('value')) : (max + min) / 2;
+    // consider step
+    if (value % step > step / 2) {
+      value = value - value % step + step;
+    } else {
+      value = value - value % step;
+    }
     element.setAttribute('value', value);
     setValue(value);
 
@@ -216,7 +226,7 @@ let Range = (() => {
     } else {
       newValue = Number(newValue.toFixed(precision));
     }
-    
+
     _calculateValue((Math.abs(newValue - min) / step) * stepWidth);
 
     // update module value
