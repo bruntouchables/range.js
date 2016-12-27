@@ -3,9 +3,9 @@ Finally, a range slider that we all deserve.
 
 _Under Development_
 
-### TODO
+## TODO
 
-
+### v1
 1. adjust range width and height values in CSS
 2. improve behavior if styles are disabled
 3. use _range (or other) prefix for CSS classes
