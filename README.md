@@ -1,30 +1,16 @@
 # range.js<sup>α</sup>
 Finally, a range slider that we all deserve.
 
-### TODO
-
-1. ~~doesn't work properly if min != 0~~
-2. adjust range width and height values in CSS
-3. ~~find a better solution for a `dragstart` event fake ghost~~
-4. ~~get rid off the drag cursor~~
-5. ~~change value on click~~
-6. ~~make default value = (max + min) / 2~~
-7. improve behavior if styles are disabled
-8. ~~add `setValue` and `getValue` functionality~~
-9. ~~get rid off the id attribute requirement~~
-10. ~~use JS module pattern~~
-11. ~~onInit(), onSlide(), onSlideEnd() functions~~
-12. ~~add `oninput` event handler~~
-13. ~~add multiple inputs support~~
-14. ~~add multiple outputs support~~
-15. use _range (or other) prefix for CSS classes
-16. adapt cursor position
-17. ~~calculate element position properly~~
-18. ~~add step functionality~~
-19. refactor code
-
 _Under Development_
 
+### TODO
+
+
+1. adjust range width and height values in CSS
+2. improve behavior if styles are disabled
+3. use _range (or other) prefix for CSS classes
+4. adapt cursor position
+5. refactor code
 
 
 ### v2
