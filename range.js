@@ -108,9 +108,19 @@ let Range = (() => {
     }
 
     // discontinuous drag effect
-    newWidth = (newValue - min) * stepWidth / step;
+    if (min < 0 && newValue > 0) {
+      newWidth = (newValue - min + step) * stepWidth / step;
+    } else {
+      newWidth = (newValue - min) * stepWidth / step;
+    }
 
     fill.style.width = newWidth + 'px';
+
+    if (newValue < min) {
+      newValue = min;
+    } else if (newValue > max) {
+      newValue = max;
+    }
 
     return newValue;
   }
@@ -161,10 +171,22 @@ let Range = (() => {
       return;
     }
 
-    breakpoints = Math.ceil((max - min + 1) / step);
+    // 1 extra breakpoint when 0 is in values
+    if (min < 0) {
+      breakpoints = Math.ceil((max - min + 1) / step);
+    } else {
+      breakpoints = Math.ceil((max - min) / step);
+    }
     precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
 
     stepWidth = wrapperWidth / breakpoints;
+
+    // put handle in correct place
+    if (stepWidth < 20 && stepWidth > 10) {
+      handle.style.marginLeft = '-' + stepWidth + 'px';
+    } else {
+      handle.style.marginLeft = '-10px';
+    }
 
     // default value = min
     value = element.getAttribute('value') ? Number(element.getAttribute('value')) : (max + min) / 2;
