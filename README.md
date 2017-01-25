@@ -11,6 +11,7 @@ _Under Development_
 3. use _range (or other) prefix for CSS classes
 4. adapt cursor position
 5. refactor code
+6. come up with a better name for `fill`
 
 
 ### v2
@@ -28,3 +29,4 @@ _Under Development_
 11. add observers for range attributes 
 12. change CSS dynamically
 13. make a custom element range using Custom Elements v1
+14. use ES6 classes instead of module pattern

@@ -6,22 +6,15 @@
 'use strict';
 
 let Range = (() => {
-  let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, outputList = [], wrapperWidth;
+  let oldValue, value, step, stepWidth, precision, breakpoints, min, max, outputList = [], wrapperWidth;
   let onInitCallback, onSlideCallback, onSlideEndCallback, onValueChangeCallback;
+  let wrapper, fill, handle, element;
 
-  // create a wrapper
-  let wrapper = document.createElement('div');
-  wrapper.classList.add('range');
-
-  // create a "range-fill"
-  let fill = document.createElement('span');
-  fill.classList.add('range-fill');
-
-  // create a handle
-  let handle = document.createElement('span');
-  handle.classList.add('range-handle');
-  
-  // private methods
+  /**
+   * Handle mouse down events.
+   * @param event
+   * @private
+   */
   function _mouseDown(event) {
     // add event listeners to mouse move and mouse up
     // BTDT: attach events to the document, not an element
@@ -35,6 +28,11 @@ let Range = (() => {
     return false;
   }
 
+  /**
+   * Handle mouse move events.
+   * @param event
+   * @private
+   */
   function _mouseMove(event) {
     // disable selection
     event.preventDefault();
@@ -68,6 +66,11 @@ let Range = (() => {
     }
   }
 
+  /**
+   * Handle mouse up events.
+   * @param event
+   * @private
+   */
   function _mouseUp(event) {
     // remove mouse move and mouse up events
     document.removeEventListener('mousemove', _mouseMove);
@@ -84,6 +87,12 @@ let Range = (() => {
     }
   }
 
+  /**
+   * Calculate a new range value based on a new width.
+   * @param {Number} newWidth - the new width of the "range-fill"
+   * @return {Number} the new value
+   * @private
+   */
   function _calculateValue(newWidth) {
     let newValue = min + (newWidth / stepWidth) * step;
 
@@ -125,9 +134,15 @@ let Range = (() => {
     return newValue;
   }
 
-  // public methods
-  let init = (elem, output = [], callback) => {
-    element = elem;
+  /**
+   * Initialize a range element.
+   * @param {HTMLElement} input - <input type="range"> element
+   * @param {Array} output - the list of output elements
+   * @param callback - on init callback
+   * @return a Range element
+   */
+  let init = (input, output = [], callback) => {
+    element = input;
 
     // output list
     outputList = output;
@@ -143,6 +158,18 @@ let Range = (() => {
       console.warn("An element must have a max attribute.");
       return;
     }
+
+    // create a wrapper
+    wrapper = document.createElement('div');
+    wrapper.classList.add('range');
+
+    // create a "range-fill"
+    fill = document.createElement('span');
+    fill.classList.add('range-fill');
+
+    // create a handle
+    handle = document.createElement('span');
+    handle.classList.add('range-handle');
 
     // add a wrapper element to the DOM
     element.parentNode.insertBefore(wrapper, element);
@@ -236,6 +263,10 @@ let Range = (() => {
     return Range;
   };
 
+  /**
+   * Set a new range value.
+   * @param {Number} newValue - the new value
+   */
   let setValue = (newValue) => {
     if (newValue < min || newValue > max) {
       console.warn("A new value is out of bounds.");
@@ -265,18 +296,34 @@ let Range = (() => {
     }
   };
 
+  /**
+   * Get a range value.
+   * @return {Number} the range value
+   */
   let getValue = () => {
     return value;
   };
 
+  /**
+   * On slide event handler.
+   * @param callback
+   */
   let onSlide = (callback) => {
     onSlideCallback = callback;
   };
 
+  /**
+   * On slide end event handler.
+   * @param callback
+   */
   let onSlideEnd = (callback) => {
     onSlideEndCallback = callback;
   };
 
+  /**
+   * On value change event handler.
+   * @param callback
+   */
   let onValueChange = (callback) => {
     onValueChangeCallback = callback
   };
