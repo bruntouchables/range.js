@@ -88,6 +88,28 @@ let Range = (() => {
   }
 
   /**
+   * Check if an element is valid.
+   * @param element
+   * @return {boolean}
+   * @private
+   */
+  function _validate(element) {
+    // min attribute required
+    if (!element.getAttribute('min')) {
+      console.warn("An element must have a min attribute.");
+      return false;
+    }
+
+    // max attribute required
+    if (!element.getAttribute('max')) {
+      console.warn("An element must have a max attribute.");
+      return false;
+    }
+    
+    return true;
+  }
+
+  /**
    * Calculate a new range value based on a new width.
    * @param {Number} newWidth - the new width of the "range-fill"
    * @return {Number} the new value
@@ -137,28 +159,21 @@ let Range = (() => {
   /**
    * Initialize a range element.
    * @param {HTMLElement} input - <input type="range"> element
-   * @param {Array} output - the list of output elements
+   * @param output - the list of output elements
    * @param callback - on init callback
-   * @return a Range element
+   * @return {*} a Range element
    */
   let init = (input, output = [], callback) => {
     element = input;
-
-    // output list
     outputList = output;
 
-    // min attribute required
-    if (!element.getAttribute('min')) {
-      console.warn("An element must have a min attribute.");
+    if (!_validate(element)) {
       return;
     }
 
-    // max attribute required
-    if (!element.getAttribute('max')) {
-      console.warn("An element must have a max attribute.");
-      return;
-    }
-
+    // TODO: come up with a function name for this part
+    // ------------------------------------------------ //
+    
     // create a wrapper
     wrapper = document.createElement('div');
     wrapper.classList.add('range');
@@ -186,11 +201,16 @@ let Range = (() => {
     // hide input
     element.style.display = 'none';
 
-    wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
+    // ------------------------------------------------ //
 
     min = Number(element.getAttribute('min'));
     max = Number(element.getAttribute('max'));
+    
+    // get wrapper width
+    wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
 
+    /** To be continued... */
+    
     // default step = (max - min) / 100
     step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 100;
     if (step === 0) {
@@ -252,11 +272,8 @@ let Range = (() => {
     // return input element
     Range.element = element;
 
-    // on init callback
-    onInitCallback = callback;
-
     // callback call
-    if (onInitCallback) {
+    if (onInitCallback = callback) {
       onInitCallback();
     }
 
@@ -313,19 +330,19 @@ let Range = (() => {
   };
 
   /**
-   * On slide end event handler.
-   * @param callback
-   */
-  let onSlideEnd = (callback) => {
-    onSlideEndCallback = callback;
-  };
-
-  /**
    * On value change event handler.
    * @param callback
    */
   let onValueChange = (callback) => {
     onValueChangeCallback = callback
+  };
+
+  /**
+   * On slide end event handler.
+   * @param callback
+   */
+  let onSlideEnd = (callback) => {
+    onSlideEndCallback = callback;
   };
 
   // export public methods
