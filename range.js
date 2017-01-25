@@ -9,22 +9,22 @@ let Range = (() => {
   let oldValue, value, step, stepWidth, precision, breakpoints, min, max, element, outputList = [], wrapperWidth;
   let onInitCallback, onSlideCallback, onSlideEndCallback, onValueChangeCallback;
 
-  // create wrapper
+  // create a wrapper
   let wrapper = document.createElement('div');
   wrapper.classList.add('range');
 
-  // create range-fill
+  // create a "range-fill"
   let fill = document.createElement('span');
   fill.classList.add('range-fill');
 
-  // create range-handle
+  // create a handle
   let handle = document.createElement('span');
   handle.classList.add('range-handle');
-
+  
   // private methods
   function _mouseDown(event) {
     // add event listeners to mouse move and mouse up
-    // BTDT: attach events to document not element
+    // BTDT: attach events to the document, not an element
     document.addEventListener('mousemove', _mouseMove);
     document.addEventListener('mouseup', _mouseUp);
 
@@ -144,16 +144,16 @@ let Range = (() => {
       return;
     }
 
-    // append wrapper
+    // add a wrapper element to the DOM
     element.parentNode.insertBefore(wrapper, element);
 
-    // append range-fill
+    // append a "range-fill" to the wrapper
     wrapper.appendChild(fill);
 
-    // append range-handles
+    // append a handle to the wrapper
     wrapper.appendChild(handle);
 
-    // append element
+    // append an element to the wrapper
     wrapper.appendChild(element);
 
     // hide input
@@ -236,7 +236,7 @@ let Range = (() => {
     return Range;
   };
 
-  function setValue(newValue) {
+  let setValue = (newValue) => {
     if (newValue < min || newValue > max) {
       console.warn("A new value is out of bounds.");
       return;
@@ -263,28 +263,25 @@ let Range = (() => {
         outputList[i].textContent = newValue;
       }
     }
-  }
+  };
 
-  function getValue() {
+  let getValue = () => {
     return value;
-  }
+  };
 
-  // on slide
-  function onSlide(callback) {
+  let onSlide = (callback) => {
     onSlideCallback = callback;
-  }
+  };
 
-  // on slide end
-  function onSlideEnd(callback) {
+  let onSlideEnd = (callback) => {
     onSlideEndCallback = callback;
-  }
+  };
 
-  // on value change
-  function onValueChange(callback) {
+  let onValueChange = (callback) => {
     onValueChangeCallback = callback
-  }
+  };
 
-  // return public methods
+  // export public methods
   return {
     init: init,
     setValue: setValue,

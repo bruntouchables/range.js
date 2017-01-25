@@ -10,18 +10,18 @@
     <label for="example">Rate us:</label>
     <input type="range" min="-10" max="10" step="1" id="example">
     <output></output>
-
+    
     <script src="range.js"></script>
     <script>
-      let element = document.getElementById('example');
-      let outputList = document.getElementsByTagName('output');
+      const element = document.getElementById('example');
+      const outputList = document.getElementsByTagName('output');
 
-      let rate = Range.init(element, outputList, () => {
+      const rate = Range.init(element, outputList, () => {
         console.log("range.js has been successfully initialized");
       });
 
       // set value
-//      rate.setValue(30);
+      // rate.setValue(30);
       rate.onSlide(() => {
         // do something on slide
       });
@@ -29,7 +29,7 @@
         // do something on slide end
       });
       rate.onValueChange(() => {
-        // do something only when value has been changed
+        // do something only when a rate value has been changed
       });
     </script>
   </body>

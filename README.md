@@ -27,3 +27,4 @@ _Under Development_
 10. destroy and init range
 11. add observers for range attributes 
 12. change CSS dynamically
+13. make a custom element range using Custom Elements v1
