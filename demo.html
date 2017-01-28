@@ -13,10 +13,10 @@
 
     <script src="range.js"></script>
     <script>
-      const element = document.getElementById('example');
-      const outputList = document.getElementsByTagName('output');
+      let element = document.getElementById('example');
+      let outputList = document.getElementsByTagName('output');
 
-      const rate = Range.init(element, outputList, () => {
+      let rate = Range.init(element, outputList, () => {
         // on init callback
         console.log("range.js has been successfully initialized");
       });
