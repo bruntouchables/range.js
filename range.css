@@ -20,11 +20,10 @@
   align-self: center;
   background: #fff;
   border: 3px solid #1bbe8e;
-  display: inline-flex;
-  flex-shrink: 0;
-  flex-grow: 0;
-  height: 14px;
   cursor: pointer;
-  width: 20px;
-  margin-left: -10px;
+  display: inline-flex;
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 14px;
+  width: 0;
 }
