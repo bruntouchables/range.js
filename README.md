@@ -34,4 +34,4 @@ _Under Development_
 
 
 ### v3
-1. create an angular directive for range
+1. create an angular directive
