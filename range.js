@@ -6,24 +6,28 @@
 'use strict';
 
 let Range = (() => {
-  let oldValue, value, min, max, step, breakpoints, precision;
-  let wrapper, fill, handle, element, outputList = [];
+  // BTDT: old value is used in on value change callback
+  let oldValue, value, min, max, step, breakpoints;
   let wrapperWidth, stepWidth;
+  let wrapper, fill, handle, element, outputList = [];
   let onInitCallback, onSlideCallback, onValueChangeCallback, onSlideEndCallback;
 
+  
   /**
    * Handle mouse down events.
    * @param event
    * @private
    */
   function _mouseDown(event) {
+    // disable selection (Safari)
+    event.preventDefault();
+    
     // add event listeners to mouse move and mouse up
-    // BTDT: attach events to the document, not to the element
+    // BTDT: attach events to the document, not the element
     document.addEventListener('mousemove', _mouseMove);
     document.addEventListener('mouseup', _mouseUp);
 
     // set old value
-    // BTDT: used in on value change callback
     oldValue = value;
 
     // disable selection
@@ -84,28 +88,6 @@ let Range = (() => {
   }
 
   /**
-   * Check if an element is valid.
-   * @param element
-   * @return {boolean}
-   * @private
-   */
-  function _validate(element) {
-    // min attribute required
-    if (!element.getAttribute('min')) {
-      console.warn("An element must have a min attribute.");
-      return false;
-    }
-
-    // max attribute required
-    if (!element.getAttribute('max')) {
-      console.warn("An element must have a max attribute.");
-      return false;
-    }
-
-    return true;
-  }
-
-  /**
    * Create DOM elements for wrapper, fill, and handle.
    * @private
    */
@@ -139,43 +121,11 @@ let Range = (() => {
   }
 
   /**
-   * Do initial calculations
+   * Attach events on init.
    * @private
    */
-  function _initialCalculations() {
-    min = Number(element.getAttribute('min'));
-    max = Number(element.getAttribute('max'));
-
-    // get wrapper width
-    wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
-
-    // default step = (max - min) / 10
-    step = element.getAttribute('step') ? Number(element.getAttribute('step')) : (max - min) / 10;
-    if (step <= 0) {
-      console.warn("Step cannot be less than or equal to 0.");
-      return;
-    }
-
-    breakpoints = Math.ceil((max - min + 1) / step);
-    stepWidth = wrapperWidth / (breakpoints - 1);
-
-    // TODO: handle float values
-    // if step is float
-    // precision = step - Math.floor(step) != 0 ? (step - Math.floor(step)).toString().split('.')[1].length : 0;
-
-    // TODO: set default value to median
-    // default value = min
-    value = element.getAttribute('value') ? Number(element.getAttribute('value')) : min;
-
-    setValue(value);
-  }
-
-  /**
-   * Attach events on init
-   * @private
-   */
-  function _initEvents() {
-    // on click set a new value
+  function _attachInitEvents() {
+    // set a new value on click
     wrapper.addEventListener('click', (event) => {
       if (event.target == wrapper || event.target == fill) {
         value = _calculateValue(event.offsetX);
@@ -195,20 +145,103 @@ let Range = (() => {
   }
 
   /**
-   * Calculate a new range value based on a new width.
+   * Do initial calculations.
+   * @private
+   */
+  function _initialCalculations() {
+    min = Number(element.getAttribute('min'));
+    max = Number(element.getAttribute('max'));
+
+    // get wrapper width
+    wrapperWidth = parseInt(window.getComputedStyle(wrapper).width, 10);
+
+    step = Number(element.getAttribute('step'));
+    breakpoints = Math.ceil((max - min + 1) / step);
+    stepWidth = wrapperWidth / (breakpoints - 1);
+
+    // default value = min
+    value = element.getAttribute('value') ? Number(element.getAttribute('value')) : min;
+
+    setValue(value);
+  }
+
+  /**
+   * Check if an element is valid.
+   * @param element
+   * @return {boolean}
+   * @private
+   */
+  function _validate(element) {
+    let valid = true;
+
+    // min is required
+    if (!element.getAttribute('min')) {
+      console.warn("An element must have a min attribute.");
+      valid = false;
+    }
+
+    // min must be a number
+    if (isNaN(Number(element.getAttribute('min')))) {
+      console.warn("An attribute min must be a number.");
+      valid = false;
+    }
+
+    // max is required
+    if (!element.getAttribute('max')) {
+      console.warn("An element must have a max attribute.");
+      valid = false;
+    }
+
+    // max must be a number
+    if (isNaN(Number(element.getAttribute('max')))) {
+      console.warn("An attribute max must be a number.");
+      valid = false;
+    }
+
+    // step is required
+    if (!element.getAttribute('step')) {
+      console.warn("An element must have a step attribute.");
+      valid = false;
+    }
+
+    // step must be a number
+    if (isNaN(Number(element.getAttribute('step')))) {
+      console.warn("An attribute step must be a number.");
+      valid = false;
+    }
+
+    // step must be > 0
+    if (Number(element.getAttribute('step')) <= 0) {
+      console.warn("An attribute step cannot be less than or equal to 0.");
+      valid = false;
+    }
+
+    // value must be a number
+    if (isNaN(Number(element.getAttribute('value')))) {
+      console.warn("An attribute value must be a number.");
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  /**
+   * Calculate a new value based on a new width.
    * @param newWidth - the new width of the "range-fill"
    * @return the new value
    * @private
    */
   function _calculateValue(newWidth) {
-    // BTDT: set start width = -1 not 0 to avoid additional if statement
+    // BTDT: set start width = -1, not 0 to avoid additional if statement
     let newValue, startWidth = -1, endWidth = stepWidth / 2;
-    
+
+    // loop over breakpoints to find out where the value lies
     for (let i = 0; i < breakpoints; i++) {
       if (newWidth > startWidth && newWidth <= endWidth) {
         newValue = min + i * step;
+        break;
       }
-      
+
       startWidth = endWidth;
       endWidth = endWidth + stepWidth;
     }
@@ -216,16 +249,16 @@ let Range = (() => {
     // discontinuous drag effect
     // BTDT: remove this to allow smooth effect
     newWidth = _calculateWidth(newValue);
-    
-    // TODO: move this command into another function
+
+    // update width
     fill.style.width = newWidth + 'px';
-    
+
     return newValue;
   }
 
   /**
-   * Calculate a new fill width based on a range new value.
-   * @param newValue - the new range value
+   * Calculate a new fill width based on a new value.
+   * @param newValue - the new value
    * @return {*} the new width
    * @private
    */
@@ -234,7 +267,7 @@ let Range = (() => {
   }
 
   /**
-   * Update range value
+   * Update a range value.
    * @param newValue
    * @private
    */
@@ -249,6 +282,7 @@ let Range = (() => {
       }
     }
   }
+  
 
   /**
    * Initialize a range element.
@@ -268,20 +302,21 @@ let Range = (() => {
     // create necessary range DOM elements
     _createDOMElements();
 
-    // calculate breakpoints, value, etc.
+    // calculate value, breakpoints, etc.
     _initialCalculations();
 
     // attach events on init
-    _initEvents();
+    _attachInitEvents();
 
     // on init callback call
     if (onInitCallback = callback) {
       onInitCallback();
     }
 
-    // add an input element to a Range object
+    // add an input element to the Range object
     Range.element = element;
 
+    // allow chaining
     return Range;
   };
 
@@ -290,20 +325,24 @@ let Range = (() => {
    * @param newValue - the new value
    */
   let setValue = (newValue) => {
+    // new value must be a number
+    if (isNaN(Number(newValue))) {
+      console.warn("A new value must be a number.");
+      return;
+    }
+
+    newValue = Number(newValue);
+
+    // out of bounds
     if (newValue < min || newValue > max) {
       console.warn("A new value is out of bounds.");
       return;
     }
 
-    // TODO: handle float values
-    // whole number values
-    newValue = Math.round(newValue);
-
-    // if (precision == 0) {
-    //   newValue = Math.round(newValue);
-    // } else {
-    //   newValue = Number(newValue.toFixed(precision));
-    // }
+    if ((newValue - min) % step !== 0) {
+      console.warn("A new value is not available with these range parameters.");
+      return;
+    }
 
     // set width
     fill.style.width = _calculateWidth(newValue) + 'px';
@@ -346,6 +385,7 @@ let Range = (() => {
   let onSlideEnd = (callback) => {
     onSlideEndCallback = callback;
   };
+  
 
   // export public methods
   return {
