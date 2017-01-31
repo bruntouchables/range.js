@@ -31,3 +31,7 @@ _Under Development_
 13. make a custom element range using Custom Elements v1
 14. use ES6 classes instead of module pattern
 15. write tests
+
+
+### v3
+1. create an angular directive for range
