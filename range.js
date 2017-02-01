@@ -6,7 +6,7 @@
 'use strict';
 
 let Range = (() => {
-  // BTDT: old value is used in on value change callback
+  // BTDT: old value is used in "on value change" callback
   let oldValue, value, min, max, step, breakpoints;
   let wrapperWidth, stepWidth;
   let wrapper, fill, handle, element, outputList = [];
@@ -14,7 +14,7 @@ let Range = (() => {
 
   
   /**
-   * Handle mouse down events.
+   * Handle "mouse down" events.
    * @param event
    * @private
    */
@@ -22,7 +22,7 @@ let Range = (() => {
     // disable selection (Safari)
     event.preventDefault();
     
-    // add event listeners to mouse move and mouse up
+    // add event listeners to "mouse move" and "mouse up" events
     // BTDT: attach events to the document, not the element
     document.addEventListener('mousemove', _mouseMove);
     document.addEventListener('mouseup', _mouseUp);
@@ -35,7 +35,7 @@ let Range = (() => {
   }
 
   /**
-   * Handle mouse move events.
+   * Handle "mouse move" events.
    * @param event
    * @private
    */
@@ -60,28 +60,28 @@ let Range = (() => {
       _updateValue(value);
     }
 
-    // on slide callback call
+    // "on slide" callback call
     if (onSlideCallback) {
       onSlideCallback();
     }
   }
 
   /**
-   * Handle mouse up events.
+   * Handle "mouse up" events.
    * @param event
    * @private
    */
   function _mouseUp(event) {
-    // remove mouse move and mouse up events
+    // remove "mouse move" and "mouse up" events
     document.removeEventListener('mousemove', _mouseMove);
     document.removeEventListener('mouseup', _mouseUp);
 
-    // on value change callback call
+    // "on value change" callback call
     if (onValueChangeCallback && oldValue !== value) {
       onValueChangeCallback();
     }
 
-    // on slide end callback call
+    // "on slide end" callback call
     if (onSlideEndCallback) {
       onSlideEndCallback();
     }
@@ -135,12 +135,12 @@ let Range = (() => {
       }
     });
 
-    // disable default drag start event handler
+    // disable default "drag start" event handler
     handle.addEventListener('dragstart', () => {
       return false;
     });
 
-    // add a custom mouse down event handler
+    // add a custom "mouse down" event handler
     handle.addEventListener('mousedown', _mouseDown);
   }
 
@@ -176,49 +176,49 @@ let Range = (() => {
 
     // min is required
     if (!element.getAttribute('min')) {
-      console.warn("An element must have a min attribute.");
+      console.warn("The element must have a min attribute.");
       valid = false;
     }
 
     // min must be a number
     if (isNaN(Number(element.getAttribute('min')))) {
-      console.warn("An attribute min must be a number.");
+      console.warn("The attribute min must be a number.");
       valid = false;
     }
 
     // max is required
     if (!element.getAttribute('max')) {
-      console.warn("An element must have a max attribute.");
+      console.warn("The element must have a max attribute.");
       valid = false;
     }
 
     // max must be a number
     if (isNaN(Number(element.getAttribute('max')))) {
-      console.warn("An attribute max must be a number.");
+      console.warn("The attribute max must be a number.");
       valid = false;
     }
 
     // step is required
     if (!element.getAttribute('step')) {
-      console.warn("An element must have a step attribute.");
+      console.warn("The element must have a step attribute.");
       valid = false;
     }
 
     // step must be a number
     if (isNaN(Number(element.getAttribute('step')))) {
-      console.warn("An attribute step must be a number.");
+      console.warn("The attribute step must be a number.");
       valid = false;
     }
 
     // step must be > 0
     if (Number(element.getAttribute('step')) <= 0) {
-      console.warn("An attribute step cannot be less than or equal to 0.");
+      console.warn("The attribute step cannot be less than or equal to 0.");
       valid = false;
     }
 
     // value must be a number
     if (isNaN(Number(element.getAttribute('value')))) {
-      console.warn("An attribute value must be a number.");
+      console.warn("The attribute value must be a number.");
       valid = false;
     }
 
@@ -302,13 +302,13 @@ let Range = (() => {
     // create necessary range DOM elements
     _createDOMElements();
 
-    // calculate value, breakpoints, etc.
+    // calculate the value, breakpoints, etc.
     _initialCalculations();
 
     // attach events on init
     _attachInitEvents();
 
-    // on init callback call
+    // "on init" callback call
     if (onInitCallback = callback) {
       onInitCallback();
     }
@@ -325,9 +325,9 @@ let Range = (() => {
    * @param newValue - the new value
    */
   let setValue = (newValue) => {
-    // new value must be a number
+    // the new value must be a number
     if (isNaN(Number(newValue))) {
-      console.warn("A new value must be a number.");
+      console.warn("The new value must be a number.");
       return;
     }
 
@@ -335,12 +335,12 @@ let Range = (() => {
 
     // out of bounds
     if (newValue < min || newValue > max) {
-      console.warn("A new value is out of bounds.");
+      console.warn("The new value is out of bounds.");
       return;
     }
 
     if ((newValue - min) % step !== 0) {
-      console.warn("A new value is not available with these range parameters.");
+      console.warn("The new value is not available with these range parameters.");
       return;
     }
 
@@ -363,7 +363,7 @@ let Range = (() => {
   };
 
   /**
-   * On slide event handler.
+   * "On slide" event handler.
    * @param callback
    */
   let onSlide = (callback) => {
@@ -371,7 +371,7 @@ let Range = (() => {
   };
 
   /**
-   * On value change event handler.
+   * "On value change" event handler.
    * @param callback
    */
   let onValueChange = (callback) => {
@@ -379,7 +379,7 @@ let Range = (() => {
   };
 
   /**
-   * On slide end event handler.
+   * "On slide end" event handler.
    * @param callback
    */
   let onSlideEnd = (callback) => {
