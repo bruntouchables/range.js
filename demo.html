@@ -7,33 +7,40 @@
     <link rel="stylesheet" href="range.css">
   </head>
   <body>
-    <label for="example">Rate us:</label>
-    <input type="range" min="-10" max="10" step="1" id="example">
-    <output></output>
+    <label for="input">Rate us:</label>
+    <input type="range" min="-10" max="10" step="1" id="input">
+    <output id="output"></output>
 
     <script src="range.js"></script>
     <script>
-      let element = document.getElementById('example');
-      let outputList = document.getElementsByTagName('output');
+      let input = document.getElementById('input');
+      let output = document.getElementById('output');
 
-      let rate = Range.init(element, outputList, () => {
-        // on init callback
-        console.log("range.js has been successfully initialized");
+      let range = Range.init(input, [output], () => {
+        // "on init" callback
+        console.log("range.js has been successfully initialized.");
       });
-      
-      // set value
-      rate.setValue(7);
-      
-      rate.onSlide(() => {
+
+      // to set a value
+      range.setValue(7);
+
+      // to get a value
+      let value = range.getValue();
+      console.log(value);
+
+      // "on slide" callback
+      range.onSlide(() => {
         // do something on slide
       });
 
-      rate.onSlideEnd(() => {
+      // "on slide end" callback
+      range.onSlideEnd(() => {
         // do something on slide end
       });
 
-      rate.onValueChange(() => {
-        // do something only when a rate value has been changed
+      // "on value change" callback
+      range.onValueChange(() => {
+        // do something only when a value has been changed
       });
     </script>
   </body>
