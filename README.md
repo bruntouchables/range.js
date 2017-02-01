@@ -18,10 +18,10 @@ Finally, a range slider that we all deserve.
 ```
 
 ```javascript
-let element = document.getElementById('input');
+let inputElement = document.getElementById('input');
 let outputList = document.getElementById('output');
 
-let range = Range.init(element, [outputList], () => {
+let range = Range.init(inputElement, [outputList], () => {
   // "on init" callback
   console.log("range.js has been successfully initialized.");
 });
