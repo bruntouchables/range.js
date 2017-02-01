@@ -17,7 +17,7 @@ Finally, a range slider that we all deserve.
 <span id="output"></span>
 ```
 
-```ecmascript 6
+```javascript
 let input = document.getElementById('input');
 let output = document.getElementById('output');
 
@@ -50,7 +50,4 @@ range.onValueChange(() => {
 });
 ```
 
-We will continue working on the range slider.
-Please feel free to open an issue or a pull request.
-If you like this project please leave us feedback.
-If you don't - please tell us how we can improve it.
+We will continue working on the range slider. Please feel free to open an issue or a pull request. If you like this project please leave us feedback. If you don't - please tell us how we can improve it.
