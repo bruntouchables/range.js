@@ -18,7 +18,6 @@
 
 .range-handle {
   align-self: center;
-  background: #fff;
   border: 3px solid #1bbe8e;
   cursor: pointer;
   display: inline-flex;

@@ -18,11 +18,10 @@ Finally, a range slider that we all deserve.
 ```
 
 ```javascript
-let input = document.getElementById('input');
-let output = document.getElementById('output');
+let element = document.getElementById('input');
+let outputList = document.getElementById('output');
 
-// WARNING: output must be an array of DOM elements
-let range = Range.init(input, [output], () => {
+let range = Range.init(element, [outputList], () => {
   // "on init" callback
   console.log("range.js has been successfully initialized.");
 });
@@ -50,4 +49,11 @@ range.onValueChange(() => {
 });
 ```
 
-We will continue working on the range slider. Please feel free to open an issue or a pull request. If you like this project please leave us feedback. If you don't - please tell us how we can improve it.
+We will continue working on the range slider. 
+Please feel free to open an issue or a pull request. 
+If you like this project please leave us feedback. 
+If you don't - please tell us how we can improve it.
+
+#### Authors
+- Henrikh Kantuni (@kantuni)
+- Shahen Kosyan (@k0syan)
