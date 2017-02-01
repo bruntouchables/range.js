@@ -7,14 +7,15 @@ Finally, a range slider that we all deserve.
 
 - Add **range.css** and **range.js** to your project.
 - Create an `<input type="range">` element.
-- Create a DOM element for an output.
+- Create a DOM element (output, span, etc.) for an output.
 - Call `Range.init()` with input and output elements.
 - Enjoy your range slider!
 
 ### Example
+
 ```html
 <input type="range" min="-10" max="10" step="1" id="input">
-<span id="output"></span>
+<output id="output"></output>
 ```
 
 ```javascript
@@ -55,5 +56,6 @@ If you like this project please leave us feedback.
 If you don't - please tell us how we can improve it.
 
 ### Authors
+
 - Henrikh Kantuni ([@kantuni](https://github.com/kantuni))
 - Shahen Kosyan ([@k0syan](https://github.com/k0syan))
