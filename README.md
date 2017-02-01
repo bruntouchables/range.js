@@ -11,7 +11,7 @@ Finally, a range slider that we all deserve.
 - Call `Range.init()` with input and output elements.
 - Enjoy your range slider!
 
-### Example
+### Examples
 
 ```html
 <input type="range" min="-10" max="10" step="1" id="input">
