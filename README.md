@@ -55,5 +55,5 @@ If you like this project please leave us feedback.
 If you don't - please tell us how we can improve it.
 
 #### Authors
-- Henrikh Kantuni (@kantuni)
-- Shahen Kosyan (@k0syan)
+- Henrikh Kantuni ([@kantuni](https://github.com/kantuni))
+- Shahen Kosyan ([@k0syan](https://github.com/k0syan))
