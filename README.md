@@ -3,7 +3,7 @@
 
 ### Getting started
 
-- Add **range.css** and **range.js** to your project.
+- Add _range.css_ and _range.js_ to your project.
 - Create an `<input type="range">` element.
 - Create a DOM element(s) for an output (`<output>`, `<span>`, etc.).
 - Call `Range.init()` on input and output elements.
