@@ -1,17 +1,15 @@
 # range.js<sup>β</sup>
-Finally, a range slider that we all deserve.
+> Finally, a range slider that we all deserve.
 
-> A lightweight vanilla javascript polyfill for `<input type="range">`.
-
-### Usage
+### Getting started
 
 - Add **range.css** and **range.js** to your project.
 - Create an `<input type="range">` element.
-- Create a DOM element (output, span, etc.) for an output.
-- Call `Range.init()` with input and output elements.
+- Create a DOM element(s) for an output (`<output>`, `<span>`, etc.).
+- Call `Range.init()` on input and output elements.
 - Enjoy your range slider!
 
-### Examples
+### Usage
 
 ```html
 <input type="range" min="-10" max="10" step="1" id="input">
@@ -50,12 +48,15 @@ range.onValueChange(() => {
 });
 ```
 
-We will continue working on the range slider. 
-Please feel free to open an issue or a pull request. 
-If you like this project please leave us feedback. 
-If you don't - please tell us how we can improve it.
+### Demo
+- [JSFiddle](https://jsfiddle.net/kantuni/k9tp8wqw/)
 
 ### Authors
 
 - Henrikh Kantuni ([@kantuni](https://github.com/kantuni))
 - Shahen Kosyan ([@k0syan](https://github.com/k0syan))
+
+We will continue working on the range slider.
+Please feel free to open an issue or a pull request.
+If you like this project please leave us feedback.
+If you don't - please tell us how we can improve it.
