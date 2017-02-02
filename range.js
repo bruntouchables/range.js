@@ -171,7 +171,7 @@ let Range = (() => {
    * @return {boolean}
    * @private
    */
-  function _validate(element) {
+  function _isValid(element) {
     let valid = true;
 
     // min is required
@@ -295,7 +295,7 @@ let Range = (() => {
     element = input;
     outputList = output;
 
-    if (!_validate(element)) {
+    if (!_isValid(element)) {
       return;
     }
 
