@@ -12,7 +12,7 @@ let Range = (() => {
   let wrapper, fill, handle, element, outputList = [];
   let onInitCallback, onSlideCallback, onValueChangeCallback, onSlideEndCallback;
 
-  
+
   /**
    * Handle "mouse down" events.
    * @param event
@@ -21,7 +21,10 @@ let Range = (() => {
   function _mouseDown(event) {
     // disable selection (Safari)
     event.preventDefault();
-    
+
+    // keep the active range in the document
+    document.range = Range;
+
     // add event listeners to "mouse move" and "mouse up" events
     // BTDT: attach events to the document, not the element
     document.addEventListener('mousemove', _mouseMove);
@@ -42,6 +45,8 @@ let Range = (() => {
   function _mouseMove(event) {
     // disable selection
     event.preventDefault();
+
+    console.log(event.target);
 
     let valueBeforeSlide = value;
     let newWidth = event.pageX - wrapper.getBoundingClientRect().left;
@@ -251,7 +256,7 @@ let Range = (() => {
     newWidth = _calculateWidth(newValue);
 
     // update width
-    fill.style.width = newWidth + 'px';
+    document.range.element.parentNode.getElementsByClassName('range-fill')[0].style.width = newWidth + 'px';
 
     return newValue;
   }
@@ -276,13 +281,13 @@ let Range = (() => {
     element.setAttribute('value', newValue);
 
     // update output list values
-    if (outputList) {
-      for (let i = 0; i < outputList.length; i++) {
-        outputList[i].textContent = newValue;
+    if (document.range.outputList) {
+      for (let i = 0; i < document.range.outputList.length; i++) {
+        document.range.outputList[i].textContent = newValue;
       }
     }
   }
-  
+
 
   /**
    * Initialize a range element.
@@ -315,6 +320,9 @@ let Range = (() => {
 
     // add an input element to the Range object
     Range.element = element;
+    Range.outputList = outputList;
+
+    document.range = Range;
 
     // allow chaining
     return Range;
@@ -385,7 +393,7 @@ let Range = (() => {
   let onSlideEnd = (callback) => {
     onSlideEndCallback = callback;
   };
-  
+
 
   // export public methods
   return {
