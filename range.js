@@ -299,7 +299,7 @@ let Range = (() => {
       return;
     }
 
-    // create necessary range DOM elements
+    // create necessary DOM elements
     _createDOMElements();
 
     // calculate the value, breakpoints, etc.
