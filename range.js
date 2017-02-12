@@ -22,9 +22,6 @@ let Range = (() => {
     // disable selection (Safari)
     event.preventDefault();
 
-    // keep the active range in the document
-    document.range = Range;
-
     // add event listeners to "mouse move" and "mouse up" events
     // BTDT: attach events to the document, not the element
     document.addEventListener('mousemove', _mouseMove);
@@ -45,9 +42,7 @@ let Range = (() => {
   function _mouseMove(event) {
     // disable selection
     event.preventDefault();
-
-    console.log(event.target);
-
+    
     let valueBeforeSlide = value;
     let newWidth = event.pageX - wrapper.getBoundingClientRect().left;
 
@@ -227,6 +222,8 @@ let Range = (() => {
       valid = false;
     }
 
+    // TODO: value must be <= max and >= min
+
     return valid;
   }
 
@@ -241,7 +238,7 @@ let Range = (() => {
     let newValue, startWidth = -1, endWidth = stepWidth / 2;
 
     // loop over breakpoints to find out where the value lies
-    for (let i = 0; i < breakpoints; i++) {
+    for (let i = 0; i < breakpoints; ++i) {
       if (newWidth > startWidth && newWidth <= endWidth) {
         newValue = min + i * step;
         break;
@@ -256,7 +253,7 @@ let Range = (() => {
     newWidth = _calculateWidth(newValue);
 
     // update width
-    document.range.element.parentNode.getElementsByClassName('range-fill')[0].style.width = newWidth + 'px';
+    fill.style.width = newWidth + 'px';
 
     return newValue;
   }
@@ -281,9 +278,9 @@ let Range = (() => {
     element.setAttribute('value', newValue);
 
     // update output list values
-    if (document.range.outputList) {
-      for (let i = 0; i < document.range.outputList.length; i++) {
-        document.range.outputList[i].textContent = newValue;
+    if (outputList) {
+      for (let i = 0; i < outputList.length; ++i) {
+        outputList[i].textContent = newValue;
       }
     }
   }
@@ -320,9 +317,6 @@ let Range = (() => {
 
     // add an input element to the Range object
     Range.element = element;
-    Range.outputList = outputList;
-
-    document.range = Range;
 
     // allow chaining
     return Range;
@@ -395,7 +389,6 @@ let Range = (() => {
   };
 
 
-  // export public methods
   return {
     init: init,
     setValue: setValue,
