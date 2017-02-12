@@ -30,6 +30,15 @@ let Range = (() => {
     // set old value
     oldValue = value;
 
+    // get the active range
+    wrapper = event.target.parentNode;
+    fill = wrapper.querySelector('.range-fill');
+    handle = event.target;
+    element = wrapper.querySelector('input[type="range"]');
+    outputList = document.range.get(wrapper);
+    
+    _initialCalculations();
+    
     // disable selection
     return false;
   }
@@ -42,7 +51,7 @@ let Range = (() => {
   function _mouseMove(event) {
     // disable selection
     event.preventDefault();
-    
+
     let valueBeforeSlide = value;
     let newWidth = event.pageX - wrapper.getBoundingClientRect().left;
 
@@ -161,7 +170,6 @@ let Range = (() => {
 
     // default value = min
     value = element.getAttribute('value') ? Number(element.getAttribute('value')) : min;
-
     setValue(value);
   }
 
@@ -221,8 +229,6 @@ let Range = (() => {
       console.warn("The attribute value must be a number.");
       valid = false;
     }
-
-    // TODO: value must be <= max and >= min
 
     return valid;
   }
@@ -314,9 +320,12 @@ let Range = (() => {
     if (onInitCallback = callback) {
       onInitCallback();
     }
-
-    // add an input element to the Range object
-    Range.element = element;
+    
+    // support multiple range instances
+    if (!document.range) {
+      document.range = new Map();
+    }
+    document.range.set(wrapper, outputList);
 
     // allow chaining
     return Range;
