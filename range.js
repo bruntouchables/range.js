@@ -12,7 +12,7 @@ let Range = (() => {
   let wrapper, fill, handle, element, outputList = [];
   let onInitCallback, onSlideCallback, onValueChangeCallback, onSlideEndCallback;
 
-  
+
   /**
    * Handle "mouse down" events.
    * @param event
@@ -21,7 +21,7 @@ let Range = (() => {
   function _mouseDown(event) {
     // disable selection (Safari)
     event.preventDefault();
-    
+
     // add event listeners to "mouse move" and "mouse up" events
     // BTDT: attach events to the document, not the element
     document.addEventListener('mousemove', _mouseMove);
@@ -30,6 +30,15 @@ let Range = (() => {
     // set old value
     oldValue = value;
 
+    // get the active range
+    wrapper = event.target.parentNode;
+    fill = wrapper.querySelector('.range-fill');
+    handle = event.target;
+    element = wrapper.querySelector('input[type="range"]');
+    outputList = document.range.get(wrapper);
+    
+    _initialCalculations();
+    
     // disable selection
     return false;
   }
@@ -161,7 +170,6 @@ let Range = (() => {
 
     // default value = min
     value = element.getAttribute('value') ? Number(element.getAttribute('value')) : min;
-
     setValue(value);
   }
 
@@ -236,7 +244,7 @@ let Range = (() => {
     let newValue, startWidth = -1, endWidth = stepWidth / 2;
 
     // loop over breakpoints to find out where the value lies
-    for (let i = 0; i < breakpoints; i++) {
+    for (let i = 0; i < breakpoints; ++i) {
       if (newWidth > startWidth && newWidth <= endWidth) {
         newValue = min + i * step;
         break;
@@ -277,12 +285,12 @@ let Range = (() => {
 
     // update output list values
     if (outputList) {
-      for (let i = 0; i < outputList.length; i++) {
+      for (let i = 0; i < outputList.length; ++i) {
         outputList[i].textContent = newValue;
       }
     }
   }
-  
+
 
   /**
    * Initialize a range element.
@@ -312,9 +320,12 @@ let Range = (() => {
     if (onInitCallback = callback) {
       onInitCallback();
     }
-
-    // add an input element to the Range object
-    Range.element = element;
+    
+    // support multiple range instances
+    if (!document.range) {
+      document.range = new Map();
+    }
+    document.range.set(wrapper, outputList);
 
     // allow chaining
     return Range;
@@ -385,9 +396,8 @@ let Range = (() => {
   let onSlideEnd = (callback) => {
     onSlideEndCallback = callback;
   };
-  
 
-  // export public methods
+
   return {
     init: init,
     setValue: setValue,
