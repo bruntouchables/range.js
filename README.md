@@ -49,7 +49,7 @@ range.onValueChange(() => {
 ```
 
 ### Demo
-- [JSFiddle](https://jsfiddle.net/kantuni/k9tp8wqw/)
+- [JSFiddle](https://jsfiddle.net/bruntouchables/8ayhrpk0/)
 
 ### Authors
 
