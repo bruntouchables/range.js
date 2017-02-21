@@ -5,11 +5,11 @@
 
 ### Getting started
 
-- Add _range.css_ and _range.js_ to your project.
-- Create an `<input type="range">` element.
-- Create a DOM element(s) for an output (`<output>`, `<span>`, etc.).
+- Add _range.css_ and _range.js_ to your project
+- Create an `<input type="range">` element
+- Create a DOM element(s) for an output (`<output>`, `<span>`, etc.)
 - Call `Range.init()`
-- Enjoy your range slider!
+- Enjoy!
 
 ### Usage
 
