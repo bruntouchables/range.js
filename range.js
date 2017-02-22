@@ -10,7 +10,7 @@ let Range = (() => {
   let oldValue, value, min, max, step, breakpoints;
   let wrapperWidth, stepWidth;
   let wrapper, fill, handle, element, outputList = [];
-  let onInitCallback, onSlideCallback, onValueChangeCallback, onSlideEndCallback;
+  // let onInitCallback, onSlideCallback, onValueChangeCallback, onSlideEndCallback;
 
 
   /**
@@ -35,10 +35,10 @@ let Range = (() => {
     fill = wrapper.querySelector('.range-fill');
     handle = event.target;
     element = wrapper.querySelector('input[type="range"]');
-    outputList = document.range.get(wrapper);
-    
+    outputList = document.Range.get(wrapper).outputList;
+
     _initialCalculations();
-    
+
     // disable selection
     return false;
   }
@@ -70,6 +70,7 @@ let Range = (() => {
     }
 
     // "on slide" callback call
+    let onSlideCallback = document.Range.get(wrapper).onSlideCallback;
     if (onSlideCallback) {
       onSlideCallback();
     }
@@ -86,11 +87,13 @@ let Range = (() => {
     document.removeEventListener('mouseup', _mouseUp);
 
     // "on value change" callback call
+    let onValueChangeCallback = document.Range.get(wrapper).onValueChangeCallback;
     if (onValueChangeCallback && oldValue !== value) {
       onValueChangeCallback();
     }
 
     // "on slide end" callback call
+    let onSlideEndCallback = document.Range.get(wrapper).onSlideEndCallback;
     if (onSlideEndCallback) {
       onSlideEndCallback();
     }
@@ -280,6 +283,10 @@ let Range = (() => {
    * @private
    */
   function _updateValue(newValue) {
+    if (document.Range && document.Range.has(wrapper)) {
+      document.Range.get(wrapper).value = value;
+    }
+    
     // update input value
     element.setAttribute('value', newValue);
 
@@ -316,16 +323,21 @@ let Range = (() => {
     // attach events on init
     _attachInitEvents();
 
+    // multiple range instances support
+    if (!document.Range) {
+      document.Range = new Map();
+    }
+
+    document.Range.set(wrapper, {
+      value: value,
+      outputList: outputList
+    });
+
     // "on init" callback call
+    let onInitCallback;
     if (onInitCallback = callback) {
       onInitCallback();
     }
-    
-    // support multiple range instances
-    if (!document.range) {
-      document.range = new Map();
-    }
-    document.range.set(wrapper, outputList);
 
     // allow chaining
     return Range;
@@ -370,7 +382,7 @@ let Range = (() => {
    * @return the range value
    */
   let getValue = () => {
-    return value;
+    return document.Range.get(wrapper).value;
   };
 
   /**
@@ -378,7 +390,8 @@ let Range = (() => {
    * @param callback
    */
   let onSlide = (callback) => {
-    onSlideCallback = callback;
+    // onSlideCallback = callback;
+    document.Range.get(wrapper).onSlideCallback = callback;
   };
 
   /**
@@ -386,7 +399,8 @@ let Range = (() => {
    * @param callback
    */
   let onValueChange = (callback) => {
-    onValueChangeCallback = callback;
+    // onValueChangeCallback = callback;
+    document.Range.get(wrapper).onValueChangeCallback = callback;
   };
 
   /**
@@ -394,7 +408,8 @@ let Range = (() => {
    * @param callback
    */
   let onSlideEnd = (callback) => {
-    onSlideEndCallback = callback;
+    // onSlideEndCallback = callback;
+    document.Range.get(wrapper).onSlideEndCallback = callback;
   };
 
 
