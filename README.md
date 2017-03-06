@@ -1,7 +1,7 @@
 # range.js<sup>β</sup>
 > Finally, a range slider that we all deserve.
 
-**Remark:** The current version supports only integer values for the step attribute. We will floating point values support in the nearest future. Thank you for using **range.js**. We are sorry for the inconvenience.
+**Remark:** The current version supports only integer values for the step attribute. We will support floating point values in the nearest future. Thank you for using **range.js**. We are sorry for the inconvenience.
 
 ### Getting started
 - Add _range.css_ and _range.js_ to your project
