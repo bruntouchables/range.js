@@ -18,9 +18,9 @@
 
 ```javascript
 let inputElement = document.getElementById('input');
-let outputList = document.getElementById('output');
+let outputElement = document.getElementById('output');
 
-let range = new Range(inputElement, [outputList], () => 
+let range = new Range(inputElement, outputElement, () => 
   // "on init" callback
   console.debug("range.js has been successfully initialized.");
 });
