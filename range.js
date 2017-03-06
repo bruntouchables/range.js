@@ -7,9 +7,9 @@
 
 class Range {
   /**
-   * Initialize a Range1 element.
+   * Initialize a Range element.
    * @param input - <input type="range"> element
-   * @param output - output element
+   * @param output - output element or an array of output elements
    * @param callback - on init callback
    */
   constructor(input, output, callback) {
@@ -194,57 +194,61 @@ class Range {
    * @private
    */
   _isValid(element) {
-    let valid = true;
-
     // min is required
     if (!element.getAttribute('min')) {
       console.warn("The element must have a min attribute.");
-      valid = false;
+      return false;
     }
 
     // min must be a number
     if (isNaN(Number(element.getAttribute('min')))) {
       console.warn("The attribute min must be a number.");
-      valid = false;
+      return false;
     }
 
     // max is required
     if (!element.getAttribute('max')) {
       console.warn("The element must have a max attribute.");
-      valid = false;
+      return false;
     }
 
     // max must be a number
     if (isNaN(Number(element.getAttribute('max')))) {
       console.warn("The attribute max must be a number.");
-      valid = false;
+      return false;
     }
 
     // step is required
     if (!element.getAttribute('step')) {
       console.warn("The element must have a step attribute.");
-      valid = false;
+      return false;
     }
 
     // step must be a number
     if (isNaN(Number(element.getAttribute('step')))) {
       console.warn("The attribute step must be a number.");
-      valid = false;
+      return false;
+    }
+
+    // step must be an integer
+    if (Number(element.getAttribute('step')) !== parseInt(element.getAttribute('step'), 10)) {
+      console.warn("The attribute step must be an integer.");
+      return false;
     }
 
     // step must be > 0
     if (Number(element.getAttribute('step')) <= 0) {
       console.warn("The attribute step cannot be less than or equal to 0.");
-      valid = false;
+      return false;
     }
 
     // value must be a number
     if (isNaN(Number(element.getAttribute('value')))) {
       console.warn("The attribute value must be a number.");
-      valid = false;
+      return false;
     }
 
-    return valid;
+    return true;
   }
 
   /**
@@ -303,7 +307,9 @@ class Range {
         this.output[i].textContent = newValue;
       }
     } else {
-      this.output.textContent = newValue;
+      if (this.output) {
+        this.output.textContent = newValue;
+      }
     }
   }
 

@@ -18,7 +18,7 @@
 
       let range = new Range(inputElement, outputElement, () => {
         // "on init" callback
-        console.log("range.js has been successfully initialized.");
+        console.debug("range.js has been successfully initialized.");
       });
 
       // to set a value
@@ -26,7 +26,7 @@
 
       // to get a value
       let value1 = range.getValue();
-      console.log(value1);
+      console.debug(value1);
 
       // "on slide" callback
       range.onSlide(() => {
