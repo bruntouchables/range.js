@@ -1,18 +1,16 @@
 # range.js<sup>β</sup>
 > Finally, a range slider that we all deserve.
 
-**Remark:** The current version supports only one range slider instance. We will add multiple instances support in the nearest future. Thank you for using **range.js**. We are sorry for the inconvenience.
+**Remark:** The current version supports only integer values for the step attribute. We will floating point values support in the nearest future. Thank you for using **range.js**. We are sorry for the inconvenience.
 
 ### Getting started
-
 - Add _range.css_ and _range.js_ to your project
 - Create an `<input type="range">` element
-- Create a DOM element(s) for an output (`<output>`, `<span>`, etc.)
-- Call `Range.init()`
+- Create a DOM element(s) for the output (`<output>`, `<span>`, etc.)
+- Initialize a new Range instance with `new Range(...)` 
 - Enjoy!
 
 ### Usage
-
 ```html
 <input type="range" min="-10" max="10" step="1" id="input">
 <output id="output"></output>
@@ -22,9 +20,9 @@
 let inputElement = document.getElementById('input');
 let outputList = document.getElementById('output');
 
-let range = Range.init(inputElement, [outputList], () => {
+let range = new Range(inputElement, [outputList], () => 
   // "on init" callback
-  console.log("range.js has been successfully initialized.");
+  console.debug("range.js has been successfully initialized.");
 });
 
 // to set a value
@@ -54,10 +52,8 @@ range.onValueChange(() => {
 - [JSFiddle](https://jsfiddle.net/bruntouchables/8ayhrpk0/)
 
 ### Authors
-
 - Henrikh Kantuni ([@kantuni](https://github.com/kantuni))
 - Shahen Kosyan ([@k0syan](https://github.com/k0syan))
-
 
 Please feel free to open an issue or a pull request.  
 If you like this project please leave us feedback. If you don't - please tell us how we can improve it.
