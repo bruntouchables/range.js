@@ -298,7 +298,11 @@ class Range {
     this.input.setAttribute('value', newValue);
 
     // update output list values
-    if (this.output) {
+    if (this.output instanceof Array) {
+      for (let i = 0; i < this.output.length; ++i) {
+        this.output[i].textContent = newValue;
+      }
+    } else {
       this.output.textContent = newValue;
     }
   }

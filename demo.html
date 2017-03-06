@@ -15,6 +15,7 @@
     <label for="input2">Rate us again:</label>
     <input type="range" min="-10" max="10" step="1" id="input2">
     <output id="output2"></output>
+    <output id="output3"></output>
 
     <script src="range.js"></script>
     <script>
@@ -56,8 +57,9 @@
       // 2nd one
       let inputElement2 = document.getElementById('input2');
       let outputElement2 = document.getElementById('output2');
+      let outputElement3 = document.getElementById('output3');
 
-      let range2 = new Range(inputElement2, outputElement2, () => {
+      let range2 = new Range(inputElement2, [outputElement2, outputElement3], () => {
         // "on init" callback
         console.log("range.js has been successfully initialized.");
       });
