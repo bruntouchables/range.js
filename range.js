@@ -8,15 +8,12 @@
 class Range {
   /**
    * Initialize a Range element.
-   * @param input - <input type="range"> element
-   * @param output - output element or an array of output elements
-   * @param callback - on init callback
    */
   constructor(input, output, callback) {
     this.input = input;
     this.output = output;
 
-    if (!this._isValid(this.input)) {
+    if (!this._isValid()) {
       return;
     }
 
@@ -37,12 +34,10 @@ class Range {
 
   /**
    * Handle "mouse down" events.
-   * @param event
-   * @private
    */
-  _mouseDown(event) {
+  _mouseDown(e) {
     // disable selection (Safari)
-    event.preventDefault();
+    e.preventDefault();
 
     // add event listeners to "mouse move" and "mouse up" events
     // BTDT: attach events to the document, not the element
@@ -60,15 +55,13 @@ class Range {
 
   /**
    * Handle "mouse move" events.
-   * @param event
-   * @private
    */
-  _mouseMove(event) {
+  _mouseMove(e) {
     // disable selection
-    event.preventDefault();
+    e.preventDefault();
 
     let valueBeforeSlide = this.value;
-    let newWidth = event.pageX - this.wrapper.getBoundingClientRect().left;
+    let newWidth = e.pageX - this.wrapper.getBoundingClientRect().left;
 
     // stay in wrapper bounds
     if (newWidth > this.wrapperWidth) {
@@ -92,10 +85,8 @@ class Range {
 
   /**
    * Handle "mouse up" events.
-   * @param event
-   * @private
    */
-  _mouseUp(event) {
+  _mouseUp(e) {
     // remove "mouse move" and "mouse up" events
     document.removeEventListener('mousemove', this._mouseMove);
     document.removeEventListener('mouseup', this._mouseUp);
@@ -113,7 +104,6 @@ class Range {
 
   /**
    * Create DOM elements for wrapper, fill, and handle.
-   * @private
    */
   _createDOMElements() {
     // create a wrapper
@@ -146,7 +136,6 @@ class Range {
 
   /**
    * Attach events on init.
-   * @private
    */
   _attachInitEvents() {
     // set a new value on click
@@ -169,7 +158,6 @@ class Range {
 
   /**
    * Do initial calculations.
-   * @private
    */
   _initialCalculations() {
     this.min = Number(this.input.getAttribute('min'));
@@ -189,61 +177,58 @@ class Range {
 
   /**
    * Check if an element is valid.
-   * @param element
-   * @return {boolean}
-   * @private
    */
-  _isValid(element) {
+  _isValid() {
     // min is required
-    if (!element.getAttribute('min')) {
+    if (!this.input.getAttribute('min')) {
       console.warn("The element must have a min attribute.");
       return false;
     }
 
     // min must be a number
-    if (isNaN(Number(element.getAttribute('min')))) {
+    if (isNaN(Number(this.input.getAttribute('min')))) {
       console.warn("The attribute min must be a number.");
       return false;
     }
 
     // max is required
-    if (!element.getAttribute('max')) {
+    if (!this.input.getAttribute('max')) {
       console.warn("The element must have a max attribute.");
       return false;
     }
 
     // max must be a number
-    if (isNaN(Number(element.getAttribute('max')))) {
+    if (isNaN(Number(this.input.getAttribute('max')))) {
       console.warn("The attribute max must be a number.");
       return false;
     }
 
     // step is required
-    if (!element.getAttribute('step')) {
+    if (!this.input.getAttribute('step')) {
       console.warn("The element must have a step attribute.");
       return false;
     }
 
     // step must be a number
-    if (isNaN(Number(element.getAttribute('step')))) {
+    if (isNaN(Number(this.input.getAttribute('step')))) {
       console.warn("The attribute step must be a number.");
       return false;
     }
 
     // step must be an integer
-    if (Number(element.getAttribute('step')) !== parseInt(element.getAttribute('step'), 10)) {
+    if (Number(this.input.getAttribute('step')) !== parseInt(this.input.getAttribute('step'), 10)) {
       console.warn("The attribute step must be an integer.");
       return false;
     }
 
     // step must be > 0
-    if (Number(element.getAttribute('step')) <= 0) {
+    if (Number(this.input.getAttribute('step')) <= 0) {
       console.warn("The attribute step cannot be less than or equal to 0.");
       return false;
     }
 
     // value must be a number
-    if (isNaN(Number(element.getAttribute('value')))) {
+    if (isNaN(Number(this.input.getAttribute('value')))) {
       console.warn("The attribute value must be a number.");
       return false;
     }
@@ -253,9 +238,6 @@ class Range {
 
   /**
    * Calculate a new value based on a new width.
-   * @param newWidth - the new width of the "range-fill"
-   * @return the new value
-   * @private
    */
   _calculateValue(newWidth) {
     // BTDT: set start width = -1, not 0 to avoid additional if statement
@@ -284,9 +266,6 @@ class Range {
 
   /**
    * Calculate a new fill width based on a new value.
-   * @param newValue - the new value
-   * @return {*} the new width
-   * @private
    */
   _calculateWidth(newValue) {
     return (Math.abs(newValue - this.min) / this.step) * this.stepWidth;
@@ -294,8 +273,6 @@ class Range {
 
   /**
    * Update a range value.
-   * @param newValue
-   * @private
    */
   _updateValue(newValue) {
     // update input value
@@ -312,10 +289,10 @@ class Range {
       }
     }
   }
+  
 
   /**
    * Set a new range value.
-   * @param newValue - the new value
    */
   setValue(newValue) {
     // the new value must be a number
@@ -349,7 +326,6 @@ class Range {
 
   /**
    * Get a range value.
-   * @return the range value
    */
   getValue() {
     return this.value;
@@ -357,7 +333,6 @@ class Range {
 
   /**
    * "On slide" event handler.
-   * @param callback
    */
   onSlide(callback) {
     this.onSlideCallback = callback;
@@ -365,7 +340,6 @@ class Range {
 
   /**
    * "On value change" event handler.
-   * @param callback
    */
   onValueChange(callback) {
     this.onValueChangeCallback = callback;
@@ -373,7 +347,6 @@ class Range {
 
   /**
    * "On slide end" event handler.
-   * @param callback
    */
   onSlideEnd(callback) {
     this.onSlideEndCallback = callback;
