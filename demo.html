@@ -6,41 +6,90 @@
     <link rel="stylesheet" href="range.css">
   </head>
   <body>
-    <label for="input">Rate us:</label>
-    <input type="range" min="-10" max="10" step="1" id="input">
-    <output id="output"></output>
+    <h2>Test 1</h2>
+    <label for="input1">Rate us:</label>
+    <input type="range" min="-10" max="10" step="1" id="input1">
+    <output id="output1"></output>
+
+    <h2>Test 2</h2>
+    <label for="input2">Rate us again:</label>
+    <input type="range" min="-10" max="10" step="1" id="input2">
+    <output id="output2"></output>
 
     <script src="range.js"></script>
     <script>
-      let inputElement = document.getElementById('input');
-      let outputList = document.getElementById('output');
+      // 1st one
+      let inputElement1 = document.getElementById('input1');
+      let outputElement1 = document.getElementById('output1');
 
-      let range = Range.init(inputElement, [outputList], () => {
+      let range1 = new Range(inputElement1, outputElement1, () => {
         // "on init" callback
         console.log("range.js has been successfully initialized.");
       });
 
       // to set a value
-      range.setValue(7);
+      range1.setValue(7);
 
       // to get a value
-      let value = range.getValue();
-      console.log(value);
+      let value1 = range1.getValue();
+      console.log(value1);
 
       // "on slide" callback
-      range.onSlide(() => {
+      range1.onSlide(() => {
         // do something on slide
-      });
-
-      // "on slide end" callback
-      range.onSlideEnd(() => {
-        // do something on slide end
+        console.log('aa1');
       });
 
       // "on value change" callback
-      range.onValueChange(() => {
+      range1.onValueChange(() => {
         // do something only when a value has been changed
+        console.log('bb1');
       });
+
+      // "on slide end" callback
+      range1.onSlideEnd(() => {
+        // do something on slide end
+        console.log('cc1');
+      });
+
+
+      // 2nd one
+      let inputElement2 = document.getElementById('input2');
+      let outputElement2 = document.getElementById('output2');
+
+      let range2 = new Range(inputElement2, outputElement2, () => {
+        // "on init" callback
+        console.log("range.js has been successfully initialized.");
+      });
+
+      // to set a value
+      range2.setValue(3);
+
+      // to get a value
+      let value2 = range2.getValue();
+      console.log(value2);
+
+      // "on slide" callback
+      range2.onSlide(() => {
+        // do something on slide
+        console.log('aa2');
+      });
+
+      // "on value change" callback
+      range2.onValueChange(() => {
+        // do something only when a value has been changed
+        console.log('bb2');
+      });
+
+      // "on slide end" callback
+      range2.onSlideEnd(() => {
+        // do something on slide end
+        console.log('cc2');
+      });
+
+      range1.setValue(5);
+      console.log(range2.getValue());
+      console.log(range1.getValue());
     </script>
   </body>
 </html>
