@@ -6,9 +6,6 @@
 'use strict';
 
 class Range {
-  /**
-   * Initialize a Range element.
-   */
   constructor(input, output, callback) {
     this.input = input;
     this.output = output;
@@ -32,9 +29,6 @@ class Range {
     }
   }
 
-  /**
-   * Handle "mouse down" events.
-   */
   _mouseDown(e) {
     // disable selection (Safari)
     e.preventDefault();
@@ -53,9 +47,6 @@ class Range {
     return false;
   }
 
-  /**
-   * Handle "mouse move" events.
-   */
   _mouseMove(e) {
     // disable selection
     e.preventDefault();
@@ -83,9 +74,6 @@ class Range {
     }
   }
 
-  /**
-   * Handle "mouse up" events.
-   */
   _mouseUp(e) {
     // remove "mouse move" and "mouse up" events
     document.removeEventListener('mousemove', this._mouseMove);
@@ -102,9 +90,6 @@ class Range {
     }
   }
 
-  /**
-   * Create DOM elements for wrapper, fill, and handle.
-   */
   _createDOMElements() {
     // create a wrapper
     this.wrapper = document.createElement('div');
@@ -134,9 +119,6 @@ class Range {
     this.input.style.display = 'none';
   }
 
-  /**
-   * Attach events on init.
-   */
   _attachInitEvents() {
     // set a new value on click
     this.wrapper.addEventListener('click', (event) => {
@@ -156,9 +138,6 @@ class Range {
     this.handle.addEventListener('mousedown', this._mouseDown);
   }
 
-  /**
-   * Do initial calculations.
-   */
   _initialCalculations() {
     this.min = Number(this.input.getAttribute('min'));
     this.max = Number(this.input.getAttribute('max'));
@@ -175,9 +154,6 @@ class Range {
     this.setValue(this.value);
   }
 
-  /**
-   * Check if an element is valid.
-   */
   _isValid() {
     // min is required
     if (!this.input.getAttribute('min')) {
@@ -236,9 +212,6 @@ class Range {
     return true;
   }
 
-  /**
-   * Calculate a new value based on a new width.
-   */
   _calculateValue(newWidth) {
     // BTDT: set start width = -1, not 0 to avoid additional if statement
     let newValue, startWidth = -1, endWidth = this.stepWidth / 2;
@@ -264,16 +237,10 @@ class Range {
     return newValue;
   }
 
-  /**
-   * Calculate a new fill width based on a new value.
-   */
   _calculateWidth(newValue) {
     return (Math.abs(newValue - this.min) / this.step) * this.stepWidth;
   }
 
-  /**
-   * Update a range value.
-   */
   _updateValue(newValue) {
     // update input value
     this.input.setAttribute('value', newValue);
@@ -291,9 +258,6 @@ class Range {
   }
   
 
-  /**
-   * Set a new range value.
-   */
   setValue(newValue) {
     // the new value must be a number
     if (isNaN(Number(newValue))) {
@@ -324,30 +288,18 @@ class Range {
     this._updateValue(newValue);
   };
 
-  /**
-   * Get a range value.
-   */
   getValue() {
     return this.value;
   };
 
-  /**
-   * "On slide" event handler.
-   */
   onSlide(callback) {
     this.onSlideCallback = callback;
   };
 
-  /**
-   * "On value change" event handler.
-   */
   onValueChange(callback) {
     this.onValueChangeCallback = callback;
   };
 
-  /**
-   * "On slide end" event handler.
-   */
   onSlideEnd(callback) {
     this.onSlideEndCallback = callback;
   };
