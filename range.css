@@ -1,8 +1,9 @@
 .range {
   background: #cfd8d6;
+  box-sizing: border-box;
   display: inline-flex;
   height: 10px;
-  margin: 7px 0;
+  margin: 5px 0;
   width: 400px;
 }
 
@@ -12,6 +13,7 @@
 
 .range-fill {
   background: #1bbe8e;
+  box-sizing: border-box;
   display: inline-flex;
   width: 0;
 }
@@ -19,10 +21,11 @@
 .range-handle {
   align-self: center;
   border: 3px solid #1bbe8e;
+  box-sizing: border-box;
   cursor: pointer;
   display: inline-flex;
   flex-grow: 0;
   flex-shrink: 0;
-  height: 14px;
+  height: 20px;
   width: 0;
 }
