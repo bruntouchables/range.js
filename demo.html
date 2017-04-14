@@ -24,8 +24,13 @@
       range.setValue(7);
 
       // to get a value
-      let value1 = range.getValue();
-      console.log(value1);
+      let value = range.getValue();
+      console.log(value);
+
+      // "on click" callback
+      range.onClick(() => {
+        // do something on click
+      });
 
       // "on slide" callback
       range.onSlide(() => {
@@ -41,10 +46,6 @@
       range.onSlideEnd(() => {
         // do something on slide end
       });
-
-      range.onClick(() => {
-        // do something on click
-      })
     </script>
   </body>
 </html>

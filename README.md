@@ -32,6 +32,11 @@ range.setValue(7);
 let value = range.getValue();
 console.log(value);
 
+// "on click" callback
+range.onClick(() => {
+  // do something on click
+});
+
 // "on slide" callback
 range.onSlide(() => {
   // do something on slide
