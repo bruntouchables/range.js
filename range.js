@@ -128,6 +128,11 @@ class Range {
         // update value
         this._updateValue(this.value);
 
+        // "on value change" callback call
+        if (this.onValueChangeCallback) {
+          this.onValueChangeCallback();
+        }
+
         // "on click" callback call
         if (this.onClickCallback) {
           this.onClickCallback();
