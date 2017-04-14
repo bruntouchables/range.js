@@ -122,11 +122,16 @@ class Range {
   _attachInitEvents() {
     // set a new value on click
     this.wrapper.addEventListener('click', (event) => {
-      if (event.target == this.wrapper || event.target == this.fill) {
+      if (event.target === this.wrapper || event.target === this.fill) {
         this.value = this._calculateValue(event.offsetX);
 
         // update value
         this._updateValue(this.value);
+
+        // "on click" callback call
+        if (this.onClickCallback) {
+          this.onClickCallback();
+        }
       }
     });
 
@@ -291,6 +296,10 @@ class Range {
   getValue() {
     return this.value;
   };
+
+  onClick(callback) {
+    this.onClickCallback = callback;
+  }
 
   onSlide(callback) {
     this.onSlideCallback = callback;
