@@ -7,7 +7,7 @@
 - Add _range.css_ and _range.js_ to your project
 - Create an `<input type="range">` element
 - Create a DOM element(s) for the output (`<output>`, `<span>`, etc.)
-- Initialize a new Range instance with `new Range(...)` 
+- Initialize a new Range instance 
 - Enjoy!
 
 ### Usage
