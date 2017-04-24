@@ -31,24 +31,20 @@ range.setValue(7);
 let value = range.getValue();
 console.log(value);
 
-// "on click" callback
 range.onClick(() => {
   // do something on click
 });
 
-// "on slide" callback
 range.onSlide(() => {
   // do something on slide
 });
 
-// "on slide end" callback
 range.onSlideEnd(() => {
   // do something on slide end
 });
 
-// "on value change" callback
 range.onValueChange(() => {
-  // do something only when a value has been changed
+  // do something only when the value has been changed
 });
 ```
 
