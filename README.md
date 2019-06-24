@@ -12,15 +12,15 @@
 
 ### Usage
 ```html
-<input type="range" min="-10" max="10" step="1" id="input">
+<input type="range" min="-10" max="10" step="1" id="input" />
 <output id="output"></output>
 ```
 
 ```javascript
-let inputElement = document.getElementById('input');
-let outputElement = document.getElementById('output');
+const inputElement = document.getElementById('input');
+const outputElement = document.getElementById('output');
 
-let range = new Range(inputElement, outputElement, () => {
+const range = new Range(inputElement, outputElement, () => {
   // do something on init
 });
 
@@ -28,7 +28,7 @@ let range = new Range(inputElement, outputElement, () => {
 range.setValue(7);
 
 // to get a value
-let value = range.getValue();
+const value = range.getValue();
 console.log(value);
 
 range.onClick(() => {
